@@ -23,8 +23,9 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StudentDTO>> getAllStudents(@RequestParam(required = false) Integer age) {
-        List<StudentDTO> studentsList = studentService.getAllStudents(age);
+    public ResponseEntity<List<StudentDTO>> getAllStudents(@RequestParam(required = false) List<String> address,
+                                                           @RequestParam(required = false) List<Integer> age) {
+        List<StudentDTO> studentsList = studentService.getAllStudents(address, age);
         return new ResponseEntity<>(studentsList, HttpStatus.OK);
     }
 
@@ -43,6 +44,6 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<StudentDTO> deleteStudentById(@PathVariable Integer id) {
         StudentDTO deletedStudent = studentService.deleteStudentById(id);
-        return new ResponseEntity<>(deletedStudent,HttpStatus.OK);
+        return new ResponseEntity<>(deletedStudent, HttpStatus.OK);
     }
 }

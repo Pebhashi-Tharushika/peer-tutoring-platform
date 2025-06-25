@@ -1,19 +1,10 @@
 package com.mbpt.skillmentor.root.repository;
 
-import com.mbpt.skillmentor.root.dto.ClassRoomDTO;
+import com.mbpt.skillmentor.root.entity.ClassRoomEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface ClassRoomRepository {
-
-    ClassRoomDTO createClassRoom(ClassRoomDTO classRoomDTO);
-
-    List<ClassRoomDTO> getAllClassRooms();
-
-    ClassRoomDTO getClassRoomById(Integer id);
-
-    ClassRoomDTO updateClassRoomById(ClassRoomDTO classRoomDTO);
-
-    ClassRoomDTO deleteClassRoomById(Integer id);
+@Repository
+public interface ClassRoomRepository extends JpaRepository<ClassRoomEntity, Integer> {
 
 }

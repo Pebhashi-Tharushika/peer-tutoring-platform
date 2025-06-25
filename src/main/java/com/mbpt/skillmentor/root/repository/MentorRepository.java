@@ -1,18 +1,10 @@
 package com.mbpt.skillmentor.root.repository;
 
-import com.mbpt.skillmentor.root.dto.MentorDTO;
+import com.mbpt.skillmentor.root.entity.MentorEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface MentorRepository {
-    MentorDTO createMentor(MentorDTO mentorDTO);
-
-    List<MentorDTO> getAllMentors();
-
-    MentorDTO getMentorById(Integer id);
-
-    MentorDTO updateMentorById(MentorDTO mentorDTO);
-
-    MentorDTO deleteMentorById(Integer id);
+@Repository
+public interface MentorRepository extends JpaRepository<MentorEntity, Integer> {
 
 }
