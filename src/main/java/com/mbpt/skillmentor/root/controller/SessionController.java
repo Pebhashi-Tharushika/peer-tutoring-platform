@@ -1,6 +1,7 @@
 package com.mbpt.skillmentor.root.controller;
 
 import com.mbpt.skillmentor.root.dto.SessionDTO;
+import com.mbpt.skillmentor.root.dto.SessionLiteDTO;
 import com.mbpt.skillmentor.root.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,11 @@ public class SessionController {
     @Autowired
     private SessionService sessionService;
 
+
     @PostMapping
-    public ResponseEntity<SessionDTO> createSession(@RequestBody SessionDTO sessionDTO) {
-        SessionDTO createdSession = sessionService.createSession(sessionDTO);
+    public ResponseEntity<SessionLiteDTO> createSession(@RequestBody SessionLiteDTO sessionDTO) {
+        final SessionLiteDTO createdSession = sessionService.createSession(sessionDTO);
+
         if (createdSession != null) {
             return new ResponseEntity<>(createdSession, HttpStatus.CREATED);
         } else {

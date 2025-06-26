@@ -1,32 +1,36 @@
 package com.mbpt.skillmentor.root.mapper;
 
 import com.mbpt.skillmentor.root.dto.SessionDTO;
-import com.mbpt.skillmentor.root.entity.ClassRoomEntity;
-import com.mbpt.skillmentor.root.entity.MentorEntity;
 import com.mbpt.skillmentor.root.entity.SessionEntity;
-import com.mbpt.skillmentor.root.entity.StudentEntity;
 
 public class SessionEntityDTOMapper {
 
+    public static SessionEntity map(SessionDTO sessionDTO) {
+        if (sessionDTO == null) {
+            return null;
+        }
+        SessionEntity sessionEntity = new SessionEntity();
+        sessionEntity.setSessionId(sessionDTO.getSessionId());
+        sessionEntity.setStudentEntity(StudentEntityDTOMapper.map(sessionDTO.getStudentDTO()));
+        sessionEntity.setClassRoomEntity(ClassRoomEntityDTOMapper.map(sessionDTO.getClassRoomDTO()));
+        sessionEntity.setMentorEntity(MentorEntityDTOMapper.map(sessionDTO.getMentorDTO()));
+        sessionEntity.setStartTime(sessionDTO.getStartTime());
+        sessionEntity.setEndTime(sessionDTO.getEndTime());
+        return sessionEntity;
+    }
+
     public static SessionDTO map(SessionEntity sessionEntity) {
+        if (sessionEntity == null) {
+            return null;
+        }
         SessionDTO sessionDTO = new SessionDTO();
         sessionDTO.setSessionId(sessionEntity.getSessionId());
-        sessionDTO.setClassRoom(ClassRoomEntityDTOMapper.map(sessionEntity.getClassRoomEntity()));
-        sessionDTO.setMentor(MentorEntityDTOMapper.map(sessionEntity.getMentorEntity()));
-        sessionDTO.setStudent(StudentEntityDTOMapper.map(sessionEntity.getStudentEntity()));
+        sessionDTO.setStudentDTO(StudentEntityDTOMapper.map(sessionEntity.getStudentEntity()));
+        sessionDTO.setClassRoomDTO(ClassRoomEntityDTOMapper.map(sessionEntity.getClassRoomEntity()));
+        sessionDTO.setMentorDTO(MentorEntityDTOMapper.map(sessionEntity.getMentorEntity()));
         sessionDTO.setStartTime(sessionEntity.getStartTime());
         sessionDTO.setEndTime(sessionEntity.getEndTime());
         return sessionDTO;
     }
 
-    public static SessionEntity map(SessionDTO sessionDTO, ClassRoomEntity classRoomEntity, MentorEntity mentorEntity, StudentEntity studentEntity) {
-        return new SessionEntity(
-                sessionDTO.getSessionId(),
-                classRoomEntity,
-                mentorEntity,
-                studentEntity,
-                sessionDTO.getStartTime(),
-                sessionDTO.getEndTime()
-        );
-    }
 }

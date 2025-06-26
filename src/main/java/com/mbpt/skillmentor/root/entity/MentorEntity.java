@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,4 +44,6 @@ public class MentorEntity {
     @Column(name = "qualification")
     private String qualification;
 
+    @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
+    private List<SessionEntity> sessionEntityList = new ArrayList<>();
 }

@@ -1,6 +1,7 @@
 package com.mbpt.skillmentor.root.service;
 
 import com.mbpt.skillmentor.root.dto.SessionDTO;
+import com.mbpt.skillmentor.root.dto.SessionLiteDTO;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface SessionService {
      * @param sessionDTO the session data transfer object containing session details
      * @return the created {@link SessionDTO } with generated mentor ID
      */
-    public abstract SessionDTO createSession(SessionDTO sessionDTO);
+    public abstract SessionLiteDTO createSession(SessionLiteDTO sessionDTO);
 
 
     /**

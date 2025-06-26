@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -37,6 +38,6 @@ public class StudentEntity {
     @Column(name = "age")
     private Integer age;
 
-    @OneToMany(mappedBy = "studentEntity")
-    private List<SessionEntity> sessionEntities;
+    @OneToMany(mappedBy = "studentEntity", fetch = FetchType.EAGER)
+    private List<SessionEntity> sessionEntityList = new ArrayList<>();
 }

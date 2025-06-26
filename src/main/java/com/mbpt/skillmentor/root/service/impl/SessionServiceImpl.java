@@ -1,27 +1,26 @@
 package com.mbpt.skillmentor.root.service.impl;
 
 import com.mbpt.skillmentor.root.dto.SessionDTO;
-import com.mbpt.skillmentor.root.entity.ClassRoomEntity;
-import com.mbpt.skillmentor.root.entity.MentorEntity;
+import com.mbpt.skillmentor.root.dto.SessionLiteDTO;
+import com.mbpt.skillmentor.root.entity.LiteSessionEntity;
 import com.mbpt.skillmentor.root.entity.SessionEntity;
-import com.mbpt.skillmentor.root.entity.StudentEntity;
+import com.mbpt.skillmentor.root.mapper.LiteSessionEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.SessionEntityDTOMapper;
-import com.mbpt.skillmentor.root.repository.ClassRoomRepository;
-import com.mbpt.skillmentor.root.repository.MentorRepository;
-import com.mbpt.skillmentor.root.repository.SessionRepository;
-import com.mbpt.skillmentor.root.repository.StudentRepository;
+import com.mbpt.skillmentor.root.repository.*;
 import com.mbpt.skillmentor.root.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SessionServiceImpl implements SessionService {
 
     @Autowired
     private SessionRepository sessionRepository;
+
+    @Autowired
+    private LiteSessionRepository liteSessionRepository;
 
     @Autowired
     private ClassRoomRepository classRoomRepository;
@@ -33,22 +32,10 @@ public class SessionServiceImpl implements SessionService {
     private StudentRepository studentRepository;
 
     @Override
-    public SessionDTO createSession(SessionDTO sessionDTO) {
-
-        Optional<ClassRoomEntity> opClassroomEntity = classRoomRepository.findById(sessionDTO.getClassRoom().getClassRoomId());
-        Optional<StudentEntity> opStudentEntity = studentRepository.findById(sessionDTO.getStudent().getStudentId());
-        Optional<MentorEntity> opMentorEntity = mentorRepository.findById(sessionDTO.getMentor().getMentorId());
-
-        if (opClassroomEntity.isPresent() && opStudentEntity.isPresent() && opMentorEntity.isPresent()) {
-            ClassRoomEntity classRoomEntity = opClassroomEntity.get();
-            MentorEntity mentorEntity = opMentorEntity.get();
-            StudentEntity studentEntity = opStudentEntity.get();
-            SessionEntity sessionEntity = SessionEntityDTOMapper.map(sessionDTO, classRoomEntity, mentorEntity, studentEntity);
-            SessionEntity savedSessionEntity = sessionRepository.save(sessionEntity);
-            return SessionEntityDTOMapper.map(savedSessionEntity);
-        }
-
-        return null;
+    public SessionLiteDTO createSession(SessionLiteDTO sessionDTO) {
+        final LiteSessionEntity liteSessionEntity = LiteSessionEntityDTOMapper.map(sessionDTO);
+        final LiteSessionEntity savedEntity = liteSessionRepository.save(liteSessionEntity);
+        return LiteSessionEntityDTOMapper.map(savedEntity);
     }
 
     @Override

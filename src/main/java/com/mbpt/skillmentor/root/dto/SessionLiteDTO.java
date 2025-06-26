@@ -9,11 +9,11 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SessionDTO {
+public class SessionLiteDTO {
     private Integer sessionId;
-    private ClassRoomDTO classRoomDTO;
-    private MentorDTO mentorDTO;
-    private StudentDTO studentDTO;
+    private Integer studentId;
+    private Integer classRoomId;
+    private Integer mentorId;
     private Instant startTime;
     private Instant endTime;
 }
