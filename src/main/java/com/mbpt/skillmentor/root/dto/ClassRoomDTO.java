@@ -15,9 +15,6 @@ public class ClassRoomDTO {
     @JsonProperty("title")
     private String title;
 
-    @JsonProperty("session_fee")
-    private Double sessionFee;
-
     @JsonProperty("enrolled_student_count")
     private Integer enrolledStudentCount;
 

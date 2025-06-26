@@ -23,9 +23,6 @@ public class ClassRoomEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "session_fee")
-    private Double sessionFee;
-
     @Column(name = "enrolled_student_count")
     private Integer enrolledStudentCount;
 

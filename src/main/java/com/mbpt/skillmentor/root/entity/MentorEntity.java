@@ -38,6 +38,9 @@ public class MentorEntity {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "session_fee")
+    private Double sessionFee;
+
     @Column(name = "profession")
     private String profession;
 

@@ -15,6 +15,7 @@ public class MentorDTO {
     private String address;
     private String phoneNumber;
     private String title;
+    private Double sessionFee;
     private String profession;
     private String subject;
     private String qualification;
