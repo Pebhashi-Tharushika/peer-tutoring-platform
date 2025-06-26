@@ -28,6 +28,8 @@ public class ClassRoomEntity {
     @Column(name = "enrolled_student_count")
     private Integer enrolledStudentCount;
 
-    @OneToMany(mappedBy = "classRoomEntity")
-    private List<SessionEntity> sessionEntities;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "mentor_id", referencedColumnName = "mentor_id")
+    private MentorEntity mentor;
+
 }

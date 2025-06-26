@@ -20,4 +20,7 @@ public class ClassRoomDTO {
 
     @JsonProperty("enrolled_student_count")
     private Integer enrolledStudentCount;
+
+    @JsonProperty("mentor")
+    private MentorDTO mentorDTO;
 }

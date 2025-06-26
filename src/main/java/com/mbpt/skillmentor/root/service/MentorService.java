@@ -23,9 +23,11 @@ public interface MentorService {
     /**
      * Retrieves all mentors, optionally filtered by age.
      *
+     * @param firstNames first name of the mentors to retrieve
+     * @param subjects subject of the mentors to retrieve
      * @return a list of MentorDTO objects representing the mentors
      */
-    List<MentorDTO> getAllMentors();
+    List<MentorDTO> getAllMentors(List<String> firstNames, List<String> subjects);
 
 
     /**

@@ -23,8 +23,8 @@ public class MentorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MentorDTO>> getAllMentors() {
-        return new ResponseEntity<>(mentorService.getAllMentors(), HttpStatus.OK);
+    public ResponseEntity<List<MentorDTO>> getAllMentors(@RequestParam List<String> firstNames, @RequestParam List<String> subjects) {
+        return new ResponseEntity<>(mentorService.getAllMentors(firstNames,subjects), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

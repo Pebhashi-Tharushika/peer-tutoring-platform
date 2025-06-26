@@ -43,6 +43,4 @@ public class MentorEntity {
     @Column(name = "qualification")
     private String qualification;
 
-    @OneToMany(mappedBy = "mentorEntity")
-    private List<SessionEntity> sessionEntities;
 }
