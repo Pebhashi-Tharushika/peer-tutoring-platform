@@ -31,7 +31,7 @@ public class SessionController {
 
     @GetMapping("/{sessionId}")
     public ResponseEntity<SessionDTO> getSessionById(@PathVariable Integer sessionId) {
-        SessionDTO sessionDTO = sessionService.getSessionById(sessionId);
+        final SessionDTO sessionDTO = sessionService.getSessionById(sessionId);
         if (sessionDTO != null) {
             return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
         } else {
@@ -41,7 +41,7 @@ public class SessionController {
 
     @GetMapping
     public ResponseEntity<List<SessionDTO>> getAllSessions() {
-        List<SessionDTO> sessions = sessionService.getAllSessions();
+        final List<SessionDTO> sessions = sessionService.getAllSessions();
         return new ResponseEntity<>(sessions, HttpStatus.OK);
     }
 

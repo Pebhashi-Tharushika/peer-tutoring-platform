@@ -1,9 +1,11 @@
 package com.mbpt.skillmentor.root.service.impl;
 
+import com.mbpt.skillmentor.root.dto.AuditDTO;
 import com.mbpt.skillmentor.root.dto.SessionDTO;
 import com.mbpt.skillmentor.root.dto.SessionLiteDTO;
 import com.mbpt.skillmentor.root.entity.LiteSessionEntity;
 import com.mbpt.skillmentor.root.entity.SessionEntity;
+import com.mbpt.skillmentor.root.mapper.AuditEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.LiteSessionEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.SessionEntityDTOMapper;
 import com.mbpt.skillmentor.root.repository.*;
@@ -48,5 +50,11 @@ public class SessionServiceImpl implements SessionService {
     public List<SessionDTO> getAllSessions() {
         List<SessionEntity> sessionEntities = sessionRepository.findAll();
         return sessionEntities.stream().map(SessionEntityDTOMapper::map).toList();
+    }
+
+    @Override
+    public List<AuditDTO> getAllAudits() {
+        final List<SessionEntity> sessionEntityList = sessionRepository.findAll();
+        return sessionEntityList.stream().map(AuditEntityDTOMapper::map).toList();
     }
 }

@@ -27,6 +27,9 @@ public class LiteSessionEntity {
     @Column(name = "mentor_id")
     private Integer mentorId;
 
+    @Column(name = "topic")
+    private String topic;
+
     @Column(name = "start_time")
     private Instant startTime;
 

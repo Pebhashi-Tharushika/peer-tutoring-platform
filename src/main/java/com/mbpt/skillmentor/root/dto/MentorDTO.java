@@ -13,6 +13,7 @@ public class MentorDTO {
     private String lastName;
     private String email;
     private String address;
+    private String phoneNumber;
     private String title;
     private String profession;
     private String subject;

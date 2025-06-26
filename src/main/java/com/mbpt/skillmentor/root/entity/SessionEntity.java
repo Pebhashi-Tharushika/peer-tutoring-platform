@@ -31,6 +31,9 @@ public class SessionEntity {
     @JoinColumn(name = "student_id", referencedColumnName = "student_id")
     private StudentEntity studentEntity;
 
+    @Column(name = "topic")
+    private String topic;
+
     @Column(name = "start_time")
     private Instant startTime;
 

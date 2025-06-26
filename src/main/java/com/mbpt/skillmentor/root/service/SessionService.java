@@ -1,5 +1,6 @@
 package com.mbpt.skillmentor.root.service;
 
+import com.mbpt.skillmentor.root.dto.AuditDTO;
 import com.mbpt.skillmentor.root.dto.SessionDTO;
 import com.mbpt.skillmentor.root.dto.SessionLiteDTO;
 
@@ -32,7 +33,15 @@ public interface SessionService {
     /**
      * Retrieves all sessions.
      *
-     * @return a list of SessionDTO objects representing the sessions
+     * @return a list of {@link SessionDTO} objects representing the sessions
      */
     public abstract List<SessionDTO> getAllSessions();
+
+
+    /**
+     * Retrieves all audits.
+     *
+     * @return a list of {@link AuditDTO} objects representing the audits
+     */
+    public abstract List<AuditDTO> getAllAudits();
 }
