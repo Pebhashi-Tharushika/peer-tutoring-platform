@@ -1,6 +1,7 @@
 package com.mbpt.skillmentor.root.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,12 @@ public class ClassRoomEntity {
     @Column(name = "class_room_id")
     private Integer classRoomId;
 
-    @Column(name = "title")
+    @NotNull(message = "Title must not be null")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "enrolled_student_count")
+    @NotNull(message = "Enrolled student count must not be null")
+    @Column(name = "enrolled_student_count", nullable = false)
     private Integer enrolledStudentCount;
 
     @OneToOne(fetch = FetchType.EAGER)

@@ -1,49 +1,59 @@
 package com.mbpt.skillmentor.root.controller;
 
+import com.mbpt.skillmentor.root.common.Constants;
 import com.mbpt.skillmentor.root.dto.StudentDTO;
 import com.mbpt.skillmentor.root.service.StudentService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
-@RequestMapping(value = "/students")
+@RequestMapping(value = "/academic")
 public class StudentController {
 
     @Autowired
     StudentService studentService;
 
-    @PostMapping
-    public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentDTO studentDTO) {
-        StudentDTO createdStudent = studentService.createStudent(studentDTO);
-        return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
+    @PostMapping(value = "/student", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
+    public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentDTO studentDTO) {
+        final StudentDTO createdStudent = studentService.createStudent(studentDTO);
+        return ResponseEntity.ok(createdStudent);
     }
 
-    @GetMapping
-    public ResponseEntity<List<StudentDTO>> getAllStudents(@RequestParam(required = false) List<String> address,
-                                                           @RequestParam(required = false) List<Integer> age) {
-        List<StudentDTO> studentsList = studentService.getAllStudents(address, age);
-        return new ResponseEntity<>(studentsList, HttpStatus.OK);
+    @GetMapping(value = "/student", produces = Constants.APPLICATION_JSON)
+    public ResponseEntity<List<StudentDTO>> getAllStudents(
+            @RequestParam(required = false) List<String> address,
+            @RequestParam(required = false) List<Integer> age,
+            @RequestParam(required = false) List<Integer> firstNames) {
+        final List<StudentDTO> studentsList = studentService.getAllStudents(address, age, firstNames);
+        return ResponseEntity.ok(studentsList);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<StudentDTO> getStudentById(@PathVariable Integer id) {
-        StudentDTO retrievedStudent = studentService.getStudentById(id);
-        return new ResponseEntity<>(retrievedStudent, HttpStatus.OK);
+    @GetMapping(value = "/student/{id}", produces = Constants.APPLICATION_JSON)
+    public ResponseEntity<StudentDTO> getStudentById(
+            @Min(value = 1, message = "Mentor ID must be a positive integer")
+            @PathVariable Integer id) {
+        final StudentDTO retrievedStudent = studentService.findStudentById(id);
+        return ResponseEntity.ok(retrievedStudent);
     }
 
-    @PutMapping
-    public ResponseEntity<StudentDTO> updateStudent(@RequestBody StudentDTO studentDTO) {
-        StudentDTO updatedStudent = studentService.updateStudentById(studentDTO);
-        return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
+    @PutMapping(value = "/student", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
+    public ResponseEntity<StudentDTO> updateStudent(@Valid @RequestBody StudentDTO studentDTO) {
+        final StudentDTO updatedStudent = studentService.updateStudentById(studentDTO);
+        return ResponseEntity.ok(updatedStudent);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<StudentDTO> deleteStudentById(@PathVariable Integer id) {
-        StudentDTO deletedStudent = studentService.deleteStudentById(id);
-        return new ResponseEntity<>(deletedStudent, HttpStatus.OK);
+    @DeleteMapping(value = "/student/{id}", produces = Constants.APPLICATION_JSON)
+    public ResponseEntity<StudentDTO> deleteStudentById(
+            @Min(value = 1, message = "Mentor ID must be a positive integer")
+            @PathVariable Integer id) {
+        final StudentDTO deletedStudent = studentService.deleteStudentById(id);
+        return ResponseEntity.ok(deletedStudent);
     }
 }

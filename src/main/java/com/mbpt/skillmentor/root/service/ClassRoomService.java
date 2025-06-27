@@ -33,7 +33,7 @@ public interface ClassRoomService {
      * @param id the ID of the classroom to retrieve
      * @return a ClassRoomDTO object representing the classroom
      */
-    ClassRoomDTO getClassRoomById(Integer id);
+    ClassRoomDTO findClassRoomById(Integer id);
 
 
     /**

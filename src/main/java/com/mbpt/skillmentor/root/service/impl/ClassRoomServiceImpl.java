@@ -45,8 +45,8 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     }
 
     @Override
-    public ClassRoomDTO getClassRoomById(Integer id) {
-        Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(id);
+    public ClassRoomDTO findClassRoomById(Integer id) {
+        final Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(id);
         if (classRoomEntity.isEmpty()) {
             throw new RuntimeException("ClassRoom not found");
         }
@@ -55,20 +55,20 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
     @Override
     public ClassRoomDTO updateClassRoomById(ClassRoomDTO classRoomDTO) {
-        Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(classRoomDTO.getClassRoomId());
+        final Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(classRoomDTO.getClassRoomId());
         if (classRoomEntity.isEmpty()) {
             throw new RuntimeException("ClassRoom not found");
         }
-        ClassRoomEntity updatedEntity = classRoomEntity.get();
+        final ClassRoomEntity updatedEntity = classRoomEntity.get();
         updatedEntity.setTitle(classRoomDTO.getTitle());
         updatedEntity.setEnrolledStudentCount(classRoomDTO.getEnrolledStudentCount());
-        ClassRoomEntity savedEntity = classRoomRepository.save(updatedEntity);
+        final ClassRoomEntity savedEntity = classRoomRepository.save(updatedEntity);
         return ClassRoomEntityDTOMapper.map(savedEntity);
     }
 
     @Override
     public ClassRoomDTO deleteClassRoomById(Integer id) {
-        Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(id);
+        final Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(id);
         if (classRoomEntity.isEmpty()) {
             throw new RuntimeException("ClassRoom not found");
         }

@@ -13,31 +13,30 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SessionLiteDTO {
-    @NotNull
     @JsonProperty("session_id")
     private Integer sessionId;
 
-    @NotNull
+    @NotNull(message = "Student ID must not be null")
     @JsonProperty("student_id")
     private Integer studentId;
 
-    @NotNull
+    @NotNull(message = "Classroom ID must not be null")
     @JsonProperty("class_room_id")
     private Integer classRoomId;
 
-    @NotNull
+    @NotNull(message = "Mentor ID must not be null")
     @JsonProperty("mentor_id")
     private Integer mentorId;
 
-    @NotBlank
+    @NotBlank(message = "Topic must not be blank")
     @JsonProperty("topic")
     private String topic;
 
-    @NotNull
+    @NotNull(message = "Start time must not be null")
     @JsonProperty("start_time")
     private Instant startTime;
 
-    @NotNull
+    @NotNull(message = "End time must not be null")
     @JsonProperty("end_time")
     private Instant endTime;
 }

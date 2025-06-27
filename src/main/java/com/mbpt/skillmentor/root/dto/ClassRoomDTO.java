@@ -11,19 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClassRoomDTO {
-    @NotNull
     @JsonProperty("class_room_id")
     private Integer classRoomId;
 
-    @NotBlank
+    @NotBlank(message = "Title must not be blank")
     @JsonProperty("title")
     private String title;
 
-    @NotNull
+    @NotNull(message = "Enrolled student count must not be null")
     @JsonProperty("enrolled_student_count")
     private Integer enrolledStudentCount;
 
-    @NotNull
     @JsonProperty("mentor")
     private MentorDTO mentorDTO;
 }

@@ -8,16 +8,17 @@ import com.mbpt.skillmentor.root.dto.SessionLiteDTO;
 import java.util.List;
 
 /**
- * Service Interface for managing sessions.
- * Provides operations to create and retrieve session records.
+ * Service interface for managing session-related operations.
+ * This includes session creation, retrieving all sessions,
+ * auditing session data, and generating mentor payment summaries.
  */
 public interface SessionService {
 
     /**
-     * Creates a new session.
+     * Creates a new session with the given session details.
      *
      * @param sessionDTO the session data transfer object containing session details
-     * @return the created {@link SessionDTO } with generated mentor ID
+     * @return the created {@link SessionDTO } with its generated ID and saved values
      */
     public abstract SessionLiteDTO createSession(SessionLiteDTO sessionDTO);
 
@@ -32,26 +33,30 @@ public interface SessionService {
 
 
     /**
-     * Retrieves all sessions.
+     * Retrieves all session records with student, mentor, and classroom details.
      *
-     * @return a list of {@link SessionDTO} objects representing the sessions
+     * @return a list of {@link SessionDTO} instances representing the sessions
      */
     public abstract List<SessionDTO> getAllSessions();
 
 
     /**
-     * Retrieves all audits.
+     * Retrieves all session audit records.
+     * This typically includes detailed info about each session for reporting or auditing.
      *
-     * @return a list of {@link AuditDTO} objects representing the audits
+     * @return a list of {@link AuditDTO} instances representing the session audit DTOs
      */
     public abstract List<AuditDTO> getAllAudits();
 
 
     /**
-     * Retrieves a list of mentor payments within the specified date range.
+     * Retrieves a list of mentor's total payments within a given date range.
+     * This method fetches and calculates the total payment details for all sessions
+     * conducted between the given start and end dates (inclusive). It is typically
+     * used for generating mentor payment summaries.
      *
-     * @param startDate the start date of the time period (inclusive)
-     * @param endDate   the end date of the time period (inclusive)
+     * @param startDate the start date of the time period (inclusive), in ISO format (e.g., "2025-01-01")
+     * @param endDate   the end date of the time period (inclusive), in ISO format (e.g., "2025-01-31")
      * @return a list of {@link PaymentDTO} instances representing the payments made to mentors
      */
     public abstract List<PaymentDTO> findMentorPayments(String startDate, String endDate);
