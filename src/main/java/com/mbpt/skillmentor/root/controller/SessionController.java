@@ -4,6 +4,11 @@ import com.mbpt.skillmentor.root.common.Constants;
 import com.mbpt.skillmentor.root.dto.SessionDTO;
 import com.mbpt.skillmentor.root.dto.SessionLiteDTO;
 import com.mbpt.skillmentor.root.service.SessionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +22,28 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/academic")
+@Tag(name = "Session Management", description = "Endpoints for creating and retrieving academic sessions")
 public class SessionController {
 
     @Autowired
     private SessionService sessionService;
 
-
+    @Operation(
+            summary = "Create a new session",
+            description = "Creates a new academic session with details about class, mentor, and time"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Session created successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request - Invalid session data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
+    })
     @PostMapping(value = "/session", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
-    public ResponseEntity<SessionLiteDTO> createSession(@Valid @RequestBody SessionLiteDTO sessionDTO) {
+    public ResponseEntity<SessionLiteDTO> createSession(
+            @Parameter(description = "Session data to create", required = true)
+            @Valid @RequestBody SessionLiteDTO sessionDTO) {
         final SessionLiteDTO createdSession = sessionService.createSession(sessionDTO);
 
         if (createdSession != null) {
@@ -34,10 +53,18 @@ public class SessionController {
         }
     }
 
+
+    @Operation(summary = "Get an academic session details by ID", description = "Retrieves a single academic session details using their unique ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Session retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid mentor ID"),
+            @ApiResponse(responseCode = "404", description = "Session not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/session/{sessionId}")
     public ResponseEntity<SessionDTO> getSessionById(
-            @Min(value = 1, message = "Mentor ID must be a positive integer")
-            @PathVariable Integer sessionId) {
+            @Parameter(description = "ID of the academic session to retrieve", required = true)
+            @Min(value = 1, message = "Mentor ID must be a positive integer") @PathVariable Integer sessionId) {
         final SessionDTO sessionDTO = sessionService.getSessionById(sessionId);
         if (sessionDTO != null) {
             return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
@@ -46,6 +73,17 @@ public class SessionController {
         }
     }
 
+
+    @Operation(
+            summary = "Get all sessions",
+            description = "Retrieves all academic sessions with extended student, mentor, and class data"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sessions retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "No sessions found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
+    })
     @GetMapping(value = "/session", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<List<SessionDTO>> getAllSessions() {
         final List<SessionDTO> sessions = sessionService.getAllSessions();
