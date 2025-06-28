@@ -2,10 +2,12 @@ package com.mbpt.skillmentor.root.controller;
 
 import com.mbpt.skillmentor.root.common.Constants;
 import com.mbpt.skillmentor.root.dto.MentorDTO;
+import com.mbpt.skillmentor.root.exception.MentorException;
 import com.mbpt.skillmentor.root.service.MentorService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +26,13 @@ public class MentorController {
     }
 
     @PostMapping(value = "/mentor", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
-    public ResponseEntity<MentorDTO> createMentor(@Valid @RequestBody MentorDTO mentorDTO) {
-        final MentorDTO createdMentor = mentorService.createMentor(mentorDTO);
-        return ResponseEntity.ok(createdMentor);
+    public ResponseEntity<?> createMentor(@Valid @RequestBody MentorDTO mentorDTO) {
+        try {
+            final MentorDTO savedDTO = mentorService.createMentor(mentorDTO);
+            return ResponseEntity.ok(savedDTO);
+        } catch (MentorException mentorException) {
+            return ResponseEntity.badRequest().body(mentorException.getMessage());
+        }
     }
 
     @GetMapping(value = "/mentor", produces = Constants.APPLICATION_JSON)
@@ -38,24 +44,36 @@ public class MentorController {
     }
 
     @GetMapping(value = "/mentor/{id}", produces = Constants.APPLICATION_JSON)
-    public ResponseEntity<MentorDTO> getMentorById(
+    public ResponseEntity<?> getMentorById(
             @PathVariable
             @Min(value = 1, message = "Mentor ID must be a positive integer") Integer id) {
-        final MentorDTO retrievedMentor = mentorService.findMentorById(id);
-        return ResponseEntity.ok(retrievedMentor);
+        try {
+            final MentorDTO mentor = mentorService.findMentorById(id);
+            return ResponseEntity.ok(mentor);
+        } catch (MentorException mentorException) {
+            return ResponseEntity.badRequest().body(mentorException.getMessage());
+        }
     }
 
     @PutMapping(value = "/mentor", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
-    public ResponseEntity<MentorDTO> updateMentor(@Valid @RequestBody MentorDTO mentorDTO) {
-        final MentorDTO updatedMentor = mentorService.updateMentorById(mentorDTO);
-        return ResponseEntity.ok(updatedMentor);
+    public ResponseEntity<?> updateMentor(@Valid @RequestBody MentorDTO mentorDTO) {
+        try {
+            final MentorDTO mentor = mentorService.updateMentorById(mentorDTO);
+            return ResponseEntity.ok(mentor);
+        } catch (MentorException mentorException) {
+            return new ResponseEntity<>(mentorException.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping(value = "/mentor/{id}", produces = Constants.APPLICATION_JSON)
-    public ResponseEntity<MentorDTO> deleteMentor(
+    public ResponseEntity<?> deleteMentor(
             @Min(value = 1, message = "Mentor ID must be a positive integer")
             @PathVariable Integer id) {
-        final MentorDTO deletedMentor = mentorService.deleteMentorById(id);
-        return ResponseEntity.ok(deletedMentor);
+        try {
+            final MentorDTO mentor = mentorService.deleteMentorById(id);
+            return ResponseEntity.ok(mentor);
+        } catch (MentorException mentorException) {
+            return ResponseEntity.badRequest().body(mentorException.getMessage());
+        }
     }
 }

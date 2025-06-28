@@ -1,6 +1,7 @@
 package com.mbpt.skillmentor.root.service;
 
 import com.mbpt.skillmentor.root.dto.MentorDTO;
+import com.mbpt.skillmentor.root.exception.MentorException;
 
 import java.util.List;
 
@@ -17,14 +18,14 @@ public interface MentorService {
      * @param mentorDTO the data transfer object containing mentor details
      * @return the created {@link MentorDTO } with generated mentor ID
      */
-    MentorDTO createMentor(MentorDTO mentorDTO);
+    MentorDTO createMentor(MentorDTO mentorDTO) throws MentorException;
 
 
     /**
      * Retrieves all mentors, optionally filtered by age.
      *
      * @param firstNames first name of the mentors to retrieve
-     * @param subjects subject of the mentors to retrieve
+     * @param subjects   subject of the mentors to retrieve
      * @return a list of MentorDTO objects representing the mentors
      */
     List<MentorDTO> getAllMentors(List<String> firstNames, List<String> subjects);
@@ -36,7 +37,7 @@ public interface MentorService {
      * @param id the ID of the mentor to retrieve
      * @return a MentorDTO object representing the mentor
      */
-    MentorDTO findMentorById(Integer id);
+    MentorDTO findMentorById(Integer id) throws MentorException;
 
 
     /**
@@ -45,7 +46,7 @@ public interface MentorService {
      * @param mentorDTO the data transfer object containing updated mentor details
      * @return a MentorDTO object representing the updated mentor
      */
-    MentorDTO updateMentorById(MentorDTO mentorDTO);
+    MentorDTO updateMentorById(MentorDTO mentorDTO) throws MentorException;
 
 
     /**
@@ -54,6 +55,6 @@ public interface MentorService {
      * @param id the ID of the mentor to delete
      * @return a MentorDTO object representing the deleted mentor
      */
-    MentorDTO deleteMentorById(Integer id);
+    MentorDTO deleteMentorById(Integer id) throws MentorException;
 
 }

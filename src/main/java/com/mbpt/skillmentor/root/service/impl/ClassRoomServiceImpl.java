@@ -3,6 +3,7 @@ package com.mbpt.skillmentor.root.service.impl;
 import com.mbpt.skillmentor.root.dto.ClassRoomDTO;
 import com.mbpt.skillmentor.root.dto.MentorDTO;
 import com.mbpt.skillmentor.root.entity.ClassRoomEntity;
+import com.mbpt.skillmentor.root.exception.ClassRoomException;
 import com.mbpt.skillmentor.root.mapper.ClassRoomEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.MentorEntityDTOMapper;
 import com.mbpt.skillmentor.root.repository.ClassRoomRepository;
@@ -48,7 +49,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public ClassRoomDTO findClassRoomById(Integer id) {
         final Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(id);
         if (classRoomEntity.isEmpty()) {
-            throw new RuntimeException("ClassRoom not found");
+            throw new ClassRoomException("ClassRoom not found");
         }
         return ClassRoomEntityDTOMapper.map(classRoomEntity.get());
     }
@@ -57,7 +58,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public ClassRoomDTO updateClassRoomById(ClassRoomDTO classRoomDTO) {
         final Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(classRoomDTO.getClassRoomId());
         if (classRoomEntity.isEmpty()) {
-            throw new RuntimeException("ClassRoom not found");
+            throw new ClassRoomException("ClassRoom not found");
         }
         final ClassRoomEntity updatedEntity = classRoomEntity.get();
         updatedEntity.setTitle(classRoomDTO.getTitle());
@@ -70,7 +71,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public ClassRoomDTO deleteClassRoomById(Integer id) {
         final Optional<ClassRoomEntity> classRoomEntity = classRoomRepository.findById(id);
         if (classRoomEntity.isEmpty()) {
-            throw new RuntimeException("ClassRoom not found");
+            throw new ClassRoomException("ClassRoom not found");
         }
         classRoomRepository.deleteById(id);
         return ClassRoomEntityDTOMapper.map(classRoomEntity.get());
