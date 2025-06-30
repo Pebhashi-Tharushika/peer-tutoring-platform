@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -73,7 +74,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @CacheEvict(value = {"studentCache", "allStudentsCache"}, key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "studentCache", key = "#id"),
+            @CacheEvict(value = "allStudentsCache", allEntries = true)
+    })
     public StudentDTO deleteStudentById(final Integer id) {
         final StudentEntity studentEntity = studentRepository.findById(id)
                 .orElseThrow(() -> new StudentException("Cannot delete. Student not found with ID: " + id));
