@@ -74,10 +74,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "studentCache", key = "#id"),
-            @CacheEvict(value = "allStudentsCache", allEntries = true)
-    })
+    @CacheEvict(value = {"studentCache", "allStudentsCache"}, allEntries = true)
     public StudentDTO deleteStudentById(final Integer id) {
         final StudentEntity studentEntity = studentRepository.findById(id)
                 .orElseThrow(() -> new StudentException("Cannot delete. Student not found with ID: " + id));
