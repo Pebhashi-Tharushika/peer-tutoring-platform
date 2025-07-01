@@ -70,7 +70,7 @@ public class StudentController {
     @GetMapping(value = "/student/{id}", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<StudentDTO> getStudentById(
             @Parameter(description = "ID of the student to fetch", required = true)
-            @Min(value = 1, message = "Mentor ID must be a positive integer") @PathVariable Integer id) {
+            @Min(value = 1, message = "Student ID must be a positive integer") @PathVariable Integer id) {
         final StudentDTO retrievedStudent = studentService.findStudentById(id);
         return ResponseEntity.ok(retrievedStudent);
     }
