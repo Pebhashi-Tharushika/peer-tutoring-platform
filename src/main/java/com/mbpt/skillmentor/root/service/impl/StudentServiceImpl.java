@@ -41,8 +41,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @Cacheable(value = "allStudentsCache", key = "'allStudents'")
-    public List<StudentDTO> getAllStudents(final List<String> address, final List<Integer> age, final List<Integer> firstNames) {
+    @Cacheable(
+            value = "allStudentsCache",
+            key = "'getAllStudents:' + #address + ':' + #age + ':' + #firstNames"
+    )
+    public List<StudentDTO> getAllStudents(final List<String> address, final List<Integer> age, final List<String> firstNames) {
         log.info("Fetching all students with filters: addresses={}, ages={}, firstNames={}", address, age, firstNames);
         final List<StudentEntity> studentEntities = studentRepository.findAll();
         List<StudentDTO> studentDTOList = studentEntities

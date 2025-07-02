@@ -56,7 +56,7 @@ public class StudentController {
     public ResponseEntity<List<StudentDTO>> getAllStudents(
             @Parameter(description = "Filter by address") @RequestParam(required = false) List<String> address,
             @Parameter(description = "Filter by age") @RequestParam(required = false) List<Integer> age,
-            @Parameter(description = "Filter by first name") @RequestParam(required = false) List<Integer> firstNames) {
+            @Parameter(description = "Filter by first name") @RequestParam(required = false) List<String> firstNames) {
         final List<StudentDTO> studentsList = studentService.getAllStudents(address, age, firstNames);
         return ResponseEntity.ok(studentsList);
     }
