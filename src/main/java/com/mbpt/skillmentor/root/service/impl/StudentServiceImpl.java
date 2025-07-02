@@ -63,7 +63,7 @@ public class StudentServiceImpl implements StudentService {
         log.info("Fetching student by ID: {}", id);
         return studentRepository.findById(id)
                 .map(student -> {
-                    log.debug("Student found: {}", student);
+                    log.info("Student found: {}", student);
                     return StudentEntityDTOMapper.map(student);
                 })
                 .orElseThrow(() -> {
