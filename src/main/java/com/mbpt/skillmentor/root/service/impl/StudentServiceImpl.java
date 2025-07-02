@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +22,7 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = {"studentCache", "allStudentsCache"}, allEntries = true)
     public StudentDTO createStudent(final StudentDTO studentDTO) {
         if (studentDTO == null) {
@@ -33,6 +34,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @Cacheable(value = "allStudentsCache", key = "'allStudents'")
     public List<StudentDTO> getAllStudents(final List<String> address, final List<Integer> age, final List<Integer> firstNames) {
         final List<StudentEntity> studentEntities = studentRepository.findAll();
@@ -46,6 +48,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @Cacheable(value = "studentCache", key = "#id")
     public StudentDTO findStudentById(final Integer id) {
         return studentRepository.findById(id)
@@ -54,6 +57,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @CachePut(value = "studentCache", key = "#studentDTO.studentId")
     @CacheEvict(value = "allStudentsCache", allEntries = true)
     public StudentDTO updateStudentById(final StudentDTO studentDTO) {
@@ -74,6 +78,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = {"studentCache", "allStudentsCache"}, allEntries = true)
     public StudentDTO deleteStudentById(final Integer id) {
         final StudentEntity studentEntity = studentRepository.findById(id)
