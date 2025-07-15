@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,7 @@ public class SessionController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @PostMapping(value = "/session", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
     public ResponseEntity<SessionLiteDTO> createSession(
             @Parameter(description = "Session data to create", required = true)
@@ -61,6 +63,7 @@ public class SessionController {
             @ApiResponse(responseCode = "404", description = "Session not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @GetMapping("/session/{sessionId}")
     public ResponseEntity<SessionDTO> getSessionById(
             @Parameter(description = "ID of the academic session to retrieve", required = true)
@@ -84,6 +87,7 @@ public class SessionController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @GetMapping(value = "/session", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<List<SessionDTO>> getAllSessions() {
         final List<SessionDTO> sessions = sessionService.getAllSessions();

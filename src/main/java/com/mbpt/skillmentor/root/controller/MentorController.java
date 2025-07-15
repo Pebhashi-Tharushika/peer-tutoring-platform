@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,7 @@ public class MentorController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @PostMapping(value = "/mentor", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
     public ResponseEntity<?> createMentor(
             @Parameter(description = "Mentor details to be created", required = true)
@@ -59,6 +61,7 @@ public class MentorController {
             @ApiResponse(responseCode = "404", description = "No mentors found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @GetMapping(value = "/mentor", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<List<MentorDTO>> getAllMentors(
             @Parameter(description = "Filter by mentor first name") @RequestParam(required = false) List<String> firstNames,
@@ -75,6 +78,7 @@ public class MentorController {
             @ApiResponse(responseCode = "404", description = "Mentor not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @GetMapping(value = "/mentor/{id}", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<?> getMentorById(
             @Parameter(description = "ID of the mentor to retrieve", required = true)
@@ -95,6 +99,7 @@ public class MentorController {
             @ApiResponse(responseCode = "404", description = "Mentor not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @PutMapping(value = "/mentor", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
     public ResponseEntity<?> updateMentor(
             @Parameter(description = "Mentor details to update", required = true)
@@ -115,6 +120,7 @@ public class MentorController {
             @ApiResponse(responseCode = "404", description = "Mentor not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @DeleteMapping(value = "/mentor/{id}", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<?> deleteMentor(
             @Parameter(description = "ID of the mentor to delete", required = true)

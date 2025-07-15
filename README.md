@@ -17,3 +17,8 @@ export DATABASE_USER=</br>
 export DATABASE_PASSWORD=
 
 mysql -h 'database host' -P 'database port' -u 'username' -p
+
+
+role:"ADMIN"</br>
+role:"MODERATOR"</br>
+role:"USER"</br>
