@@ -46,6 +46,7 @@ public class StudentController {
             @Parameter(description = "Student details to create", required = true)
             @Valid @RequestBody StudentDTO studentDTO) {
         final StudentDTO createdStudent = studentService.createStudent(studentDTO);
+        log.info("Create Student......");
         return ResponseEntity.ok(createdStudent);
     }
 
@@ -63,6 +64,7 @@ public class StudentController {
             @Parameter(description = "Filter by age") @RequestParam(required = false) List<Integer> age,
             @Parameter(description = "Filter by first name") @RequestParam(required = false) List<String> firstNames) {
         final List<StudentDTO> studentsList = studentService.getAllStudents(address, age, firstNames);
+        log.info("Get All Students......");
         return ResponseEntity.ok(studentsList);
     }
 
@@ -80,6 +82,7 @@ public class StudentController {
             @Parameter(description = "ID of the student to fetch", required = true)
             @Min(value = 1, message = "Student ID must be a positive integer") @PathVariable Integer id) {
         final StudentDTO retrievedStudent = studentService.findStudentById(id);
+        log.info("Find Student id:"+ id + "from server......");
         return ResponseEntity.ok(retrievedStudent);
     }
 
@@ -97,6 +100,7 @@ public class StudentController {
             @Parameter(description = "Student data to update", required = true)
             @Valid @RequestBody StudentDTO studentDTO) {
         final StudentDTO updatedStudent = studentService.updateStudentById(studentDTO);
+        log.info("Update details of student with id:"+ studentDTO.getStudentId());
         return ResponseEntity.ok(updatedStudent);
     }
 
@@ -114,6 +118,7 @@ public class StudentController {
             @Parameter(description = "ID of the student to delete", required = true)
             @Min(value = 1, message = "Mentor ID must be a positive integer") @PathVariable Integer id) {
         final StudentDTO deletedStudent = studentService.deleteStudentById(id);
+        log.info("Delete Student id:"+ id + "from server......");
         return ResponseEntity.ok(deletedStudent);
     }
 }
