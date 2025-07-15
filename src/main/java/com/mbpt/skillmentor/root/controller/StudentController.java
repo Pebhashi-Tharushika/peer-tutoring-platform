@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -26,9 +25,12 @@ import java.util.List;
 @Tag(name = "Student Management", description = "APIs for managing students")
 public class StudentController {
 
-    @Autowired
-    StudentService studentService;
 
+    private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @Operation(summary = "Create a new student", description = "Accepts a student JSON and creates a new student record")
     @ApiResponses(value = {

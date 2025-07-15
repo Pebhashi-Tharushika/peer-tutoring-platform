@@ -9,9 +9,9 @@ import com.mbpt.skillmentor.root.entity.SessionEntity;
 import com.mbpt.skillmentor.root.mapper.AuditEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.LiteSessionEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.SessionEntityDTOMapper;
-import com.mbpt.skillmentor.root.repository.*;
+import com.mbpt.skillmentor.root.repository.LiteSessionRepository;
+import com.mbpt.skillmentor.root.repository.SessionRepository;
 import com.mbpt.skillmentor.root.service.SessionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -20,20 +20,15 @@ import java.util.List;
 @Service
 public class SessionServiceImpl implements SessionService {
 
-    @Autowired
-    private SessionRepository sessionRepository;
 
-    @Autowired
-    private LiteSessionRepository liteSessionRepository;
+    private final SessionRepository sessionRepository;
 
-    @Autowired
-    private ClassRoomRepository classRoomRepository;
+    private final LiteSessionRepository liteSessionRepository;
 
-    @Autowired
-    private MentorRepository mentorRepository;
-
-    @Autowired
-    private StudentRepository studentRepository;
+    public SessionServiceImpl(SessionRepository sessionRepository, LiteSessionRepository liteSessionRepository) {
+        this.sessionRepository = sessionRepository;
+        this.liteSessionRepository = liteSessionRepository;
+    }
 
     @Override
     public SessionLiteDTO createSession(final SessionLiteDTO sessionDTO) {

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -24,10 +23,11 @@ import java.util.List;
 @Tag(name = "Classroom Management", description = "Endpoints for managing classrooms and their relationships")
 public class ClassRoomController {
 
-    @Autowired
-    private ClassRoomService classRoomService;
 
-    public ClassRoomController() {
+    private final ClassRoomService classRoomService;
+
+    public ClassRoomController(ClassRoomService classRoomService) {
+        this.classRoomService = classRoomService;
     }
 
     @Operation(summary = "Create a new classroom", description = "Creates a new classroom along with its mentor(s)")

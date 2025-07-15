@@ -8,7 +8,6 @@ import com.mbpt.skillmentor.root.mapper.ClassRoomEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.MentorEntityDTOMapper;
 import com.mbpt.skillmentor.root.repository.ClassRoomRepository;
 import com.mbpt.skillmentor.root.service.ClassRoomService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class ClassRoomServiceImpl implements ClassRoomService {
 
-    @Autowired
-    private ClassRoomRepository classRoomRepository;
+
+    private final ClassRoomRepository classRoomRepository;
+
+    public ClassRoomServiceImpl(ClassRoomRepository classRoomRepository) {
+        this.classRoomRepository = classRoomRepository;
+    }
 
     @Override
     public ClassRoomDTO createClassRoom(ClassRoomDTO classRoomDTO) {

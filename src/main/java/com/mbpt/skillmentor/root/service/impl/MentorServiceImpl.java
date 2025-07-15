@@ -8,7 +8,6 @@ import com.mbpt.skillmentor.root.mapper.MentorEntityDTOMapper;
 import com.mbpt.skillmentor.root.repository.ClassRoomRepository;
 import com.mbpt.skillmentor.root.repository.MentorRepository;
 import com.mbpt.skillmentor.root.service.MentorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +16,15 @@ import java.util.stream.Collectors;
 @Service
 public class MentorServiceImpl implements MentorService {
 
-    @Autowired
-    private MentorRepository mentorRepository;
 
-    @Autowired
-    ClassRoomRepository classRoomRepository;
+    private final MentorRepository mentorRepository;
+
+    private final ClassRoomRepository classRoomRepository;
+
+    public MentorServiceImpl(MentorRepository mentorRepository, ClassRoomRepository classRoomRepository) {
+        this.mentorRepository = mentorRepository;
+        this.classRoomRepository = classRoomRepository;
+    }
 
     @Override
     public MentorDTO createMentor(MentorDTO mentorDTO) throws MentorException {

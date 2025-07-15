@@ -7,7 +7,6 @@ import com.mbpt.skillmentor.root.mapper.StudentEntityDTOMapper;
 import com.mbpt.skillmentor.root.repository.StudentRepository;
 import com.mbpt.skillmentor.root.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -24,8 +23,11 @@ public class StudentServiceImpl implements StudentService {
     @Value("${spring.datasource.url}")
     private String datasource;
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

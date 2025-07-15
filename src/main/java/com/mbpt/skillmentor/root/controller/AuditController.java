@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +23,12 @@ import java.util.List;
 @Tag(name = "Audit & Mentor Payments", description = "Endpoints for viewing audit logs and mentor payment reports")
 public class AuditController {
 
-    @Autowired
-    private SessionService sessionService;
+
+    private final SessionService sessionService;
+
+    public AuditController(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     @Operation(
             summary = "Get all audit logs",
