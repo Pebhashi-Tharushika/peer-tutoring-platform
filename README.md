@@ -7,11 +7,13 @@ Actuators
  - All   : http://localhost:8080/root/api/v1/actuator
  - Health: http://localhost:8080/root/api/v1/actuator/health
  - Info  : http://localhost:8080/root/api/v1/actuator/info
+<br><br>
 
-#### for macOS/Linux
-export GOOGLE_APPLICATION_CREDENTIALS="/path/to/firebase-service-account.json"
-export SUPABASE_DB_HOST="database host"
-export SUPABASE_DB_PORT="database port"
-export SUPABASE_DB_NAME="database name"
-export SUPABASE_DB_USER="database user"
-export SUPABASE_DB_PASSWORD="database pwd"
+**for macOS/Linux<br>**
+export DATABASE_HOST=</br>
+export DATABASE_PORT=</br>
+export DATABASE_NAME=</br>
+export DATABASE_USER=</br>
+export DATABASE_PASSWORD=
+
+mysql -h 'database host' -P 'database port' -u 'username' -p
