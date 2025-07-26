@@ -54,7 +54,13 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         if (classRoomEntity.isEmpty()) {
             throw new ClassRoomException("ClassRoom not found");
         }
-        return ClassRoomEntityDTOMapper.map(classRoomEntity.get());
+        ClassRoomEntity classRoom = classRoomEntity.get();
+        ClassRoomDTO classRoomDTO = ClassRoomEntityDTOMapper.map(classRoom);
+        if (classRoom.getMentor() != null) {
+            MentorDTO mentorDTO = MentorEntityDTOMapper.map(classRoom.getMentor());
+            classRoomDTO.setMentorDTO(mentorDTO);
+        }
+        return classRoomDTO;
     }
 
     @Override
