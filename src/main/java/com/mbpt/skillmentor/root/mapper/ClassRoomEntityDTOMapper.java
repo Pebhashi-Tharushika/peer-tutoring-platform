@@ -10,6 +10,7 @@ public class ClassRoomEntityDTOMapper {
         classRoomEntity.setClassRoomId(classRoomDTO.getClassRoomId());
         classRoomEntity.setTitle(classRoomDTO.getTitle());
         classRoomEntity.setEnrolledStudentCount(classRoomDTO.getEnrolledStudentCount());
+        classRoomEntity.setClassImage(classRoomDTO.getClassImage());
         return classRoomEntity;
     }
 
@@ -18,6 +19,7 @@ public class ClassRoomEntityDTOMapper {
         classRoomDTO.setClassRoomId(classRoomEntity.getClassRoomId());
         classRoomDTO.setTitle(classRoomEntity.getTitle());
         classRoomDTO.setEnrolledStudentCount(classRoomEntity.getEnrolledStudentCount());
+        classRoomDTO.setClassImage(classRoomEntity.getClassImage());
         return classRoomDTO;
     }
 }

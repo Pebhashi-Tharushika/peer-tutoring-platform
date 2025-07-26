@@ -2,6 +2,7 @@ package com.mbpt.skillmentor.root.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class ClassRoomEntity {
     @Schema(description = "Unique ID of the classroom", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Integer classRoomId;
 
-    @NotNull(message = "Title must not be null")
+    @NotBlank(message = "Title must not be blank")
     @Column(name = "title", nullable = false)
     @Schema(description = "Title of the classroom", example = "Math 101")
     private String title;
@@ -33,6 +34,11 @@ public class ClassRoomEntity {
     @Column(name = "enrolled_student_count", nullable = false)
     @Schema(description = "Number of students enrolled", example = "30")
     private Integer enrolledStudentCount;
+
+    @NotBlank(message = "Class image must not be blank")
+    @Column(name = "class_image", nullable = false)
+    @Schema(description = "Image URL for the classroom", example = "http://example.com/classroom.jpg")
+    private String classImage;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "mentor_id", referencedColumnName = "mentor_id")

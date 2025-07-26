@@ -22,6 +22,10 @@ public class ClassRoomDTO {
     @JsonProperty("enrolled_student_count")
     private Integer enrolledStudentCount;
 
+    @NotBlank(message = "class_image must not be blank")
+    @JsonProperty("class_image")
+    private String classImage;
+
     @JsonProperty("mentor")
     private MentorDTO mentorDTO;
 }

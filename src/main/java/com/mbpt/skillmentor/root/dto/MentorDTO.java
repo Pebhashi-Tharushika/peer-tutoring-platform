@@ -63,7 +63,7 @@ public class MentorDTO {
     private String qualification;
 
     @NotBlank(message = "Mentor image can not be blank")
-    @JsonProperty("mentor-image")
+    @JsonProperty("mentor_image")
     private String mentorImage;
 
     @NotNull(message = "Classroom ID must not be null")
