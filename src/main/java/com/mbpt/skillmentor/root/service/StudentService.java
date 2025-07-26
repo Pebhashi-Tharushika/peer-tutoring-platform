@@ -38,6 +38,13 @@ public interface StudentService {
      */
     StudentDTO findStudentById(Integer id);
 
+    /**
+     * Retrieves a student by Clerk ID.
+     *
+     * @param clerkId the ID generated for the student by the clerk, to retrieve
+     * @return a StudentDTO object representing the student
+     */
+    StudentDTO findStudentByClerkId(String clerkId);
 
     /**
      * Updates an existing student's details.
@@ -55,5 +62,14 @@ public interface StudentService {
      * @return a StudentDTO object representing the deleted student
      */
     StudentDTO deleteStudentById(Integer id);
+
+
+    /**
+     * Delete a student by their Clerk ID
+     *
+     * @param clerkId the ID generated for the student by the clerk, to retrieve
+     * @return a StudentDTO object representing the deleted student
+     */
+    StudentDTO deleteStudentByClerkId(String clerkId);
 
 }

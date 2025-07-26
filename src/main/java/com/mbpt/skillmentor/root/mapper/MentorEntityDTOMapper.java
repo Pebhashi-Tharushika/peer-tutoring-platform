@@ -9,6 +9,7 @@ public class MentorEntityDTOMapper {
     public static MentorDTO map(MentorEntity mentorEntity) {
         MentorDTO mentorDTO = new MentorDTO();
         mentorDTO.setMentorId(mentorEntity.getMentorId());
+        mentorDTO.setClerkMentorId(mentorEntity.getClerkMentorId());
         mentorDTO.setFirstName(mentorEntity.getFirstName());
         mentorDTO.setLastName(mentorEntity.getLastName());
         mentorDTO.setEmail(mentorEntity.getEmail());
@@ -19,12 +20,14 @@ public class MentorEntityDTOMapper {
         mentorDTO.setProfession(mentorEntity.getProfession());
         mentorDTO.setSubject(mentorEntity.getSubject());
         mentorDTO.setQualification(mentorEntity.getQualification());
+        mentorDTO.setMentorImage(mentorDTO.getMentorImage());
         return mentorDTO;
     }
 
     public static MentorEntity map(MentorDTO mentorDTO) {
         MentorEntity mentorEntity = new MentorEntity();
         mentorEntity.setMentorId(mentorDTO.getMentorId());
+        mentorEntity.setClerkMentorId(mentorDTO.getClerkMentorId());
         mentorEntity.setFirstName(mentorDTO.getFirstName());
         mentorEntity.setLastName(mentorDTO.getLastName());
         mentorEntity.setEmail(mentorDTO.getEmail());
@@ -35,6 +38,7 @@ public class MentorEntityDTOMapper {
         mentorEntity.setProfession(mentorDTO.getProfession());
         mentorEntity.setSubject(mentorDTO.getSubject());
         mentorEntity.setQualification(mentorDTO.getQualification());
+        mentorEntity.setMentorImage(mentorDTO.getMentorImage());
         return mentorEntity;
     }
 }

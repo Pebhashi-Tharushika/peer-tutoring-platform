@@ -24,6 +24,10 @@ public class StudentEntity {
     @Column(name = "student_id")
     private Integer studentId;
 
+    @NotBlank(message = "Clerk student ID must not be blank")
+    @Column(name = "clerk_student_id", nullable = false, unique = true)
+    private String clerkStudentId;
+
     @NotBlank(message = "First name must not be blank")
     @Column(name = "first_name", nullable = false)
     private String firstName;

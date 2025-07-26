@@ -1,6 +1,7 @@
 package com.mbpt.skillmentor.root.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mbpt.skillmentor.root.common.Constants;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,10 @@ import java.time.Instant;
 public class SessionDTO {
     @JsonProperty("session_id")
     private Integer sessionId;
+
+    @NotNull(message = "Session status must not be null")
+    @JsonProperty("session_status")
+    private Constants.SessionStatus sessionStatus;
 
     @NotNull(message = "Student must not be null")
     @JsonProperty("student")

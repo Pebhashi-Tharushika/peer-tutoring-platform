@@ -3,19 +3,26 @@ package com.mbpt.skillmentor.root.service.impl;
 import com.mbpt.skillmentor.root.dto.MentorDTO;
 import com.mbpt.skillmentor.root.entity.ClassRoomEntity;
 import com.mbpt.skillmentor.root.entity.MentorEntity;
+import com.mbpt.skillmentor.root.exception.ClassRoomException;
 import com.mbpt.skillmentor.root.exception.MentorException;
 import com.mbpt.skillmentor.root.mapper.MentorEntityDTOMapper;
 import com.mbpt.skillmentor.root.repository.ClassRoomRepository;
 import com.mbpt.skillmentor.root.repository.MentorRepository;
 import com.mbpt.skillmentor.root.service.MentorService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class MentorServiceImpl implements MentorService {
 
+    @Value("${spring.datasource.url}")
+    private String datasource;
 
     private final MentorRepository mentorRepository;
 
@@ -27,17 +34,27 @@ public class MentorServiceImpl implements MentorService {
     }
 
     @Override
-    public MentorDTO createMentor(MentorDTO mentorDTO) throws MentorException {
+    @Transactional(rollbackFor = Exception.class)
+//    @CacheEvict(value = {"mentorCache", "allMentorsCache"}, allEntries = true)
+    public MentorDTO createMentor(MentorDTO mentorDTO) {
+        log.info("Creating new mentor...");
+        if (mentorDTO == null) {
+            log.error("Failed to create mentor: input DTO is null.");
+            throw new IllegalArgumentException("Mentor data must not be null.");
+        }
+        log.debug("MentorDTO received: {}", mentorDTO);
+
         final MentorEntity mentorEntity = MentorEntityDTOMapper.map(mentorDTO);
         if (mentorDTO.getClassRoomId() != null) {
             final ClassRoomEntity classRoomEntity = classRoomRepository.findById(mentorDTO.getClassRoomId())
-                    .orElseThrow(() -> new MentorException("Classroom not found with ID: " + mentorDTO.getClassRoomId()));
+                    .orElseThrow(() -> new ClassRoomException("Classroom not found with ID: " + mentorDTO.getClassRoomId()));
             classRoomEntity.setMentor(mentorEntity);
             final MentorEntity savedMentor = mentorRepository.save(mentorEntity);
             classRoomRepository.save(classRoomEntity);
             return MentorEntityDTOMapper.map(savedMentor);
         }
         final MentorEntity savedEntity = mentorRepository.save(mentorEntity);
+        log.info("Mentor created with ID: {} at data-source: {}", savedEntity.getMentorId(), this.datasource);
         return MentorEntityDTOMapper.map(savedEntity);
     }
 
@@ -55,6 +72,13 @@ public class MentorServiceImpl implements MentorService {
         return mentorRepository.findById(id)
                 .map(MentorEntityDTOMapper::map)
                 .orElseThrow(() -> new MentorException("Mentor not found with ID: " + id));
+    }
+
+    @Override
+    public MentorDTO findMentorByClerkId(String clerkId) throws MentorException {
+        return mentorRepository.findByClerkMentorId(clerkId)
+                .map(MentorEntityDTOMapper::map)
+                .orElseThrow(() -> new MentorException("Mentor not found with Clerk ID: " + clerkId));
     }
 
     @Override
@@ -83,4 +107,13 @@ public class MentorServiceImpl implements MentorService {
         mentorRepository.deleteById(id);
         return MentorEntityDTOMapper.map(mentorEntity);
     }
+
+    @Override
+    public MentorDTO deleteMentorByClerkId(String clerkId) throws MentorException {
+        final MentorEntity mentorEntity = mentorRepository.findByClerkMentorId(clerkId)
+                .orElseThrow(() -> new MentorException("Cannot delete. Mentor not found with Clerk ID: " + clerkId));
+        mentorRepository.delete(mentorEntity);
+        return MentorEntityDTOMapper.map(mentorEntity);
+    }
+
 }

@@ -24,6 +24,10 @@ public class MentorEntity {
     @Column(name = "mentor_id")
     private Integer mentorId;
 
+    @NotBlank(message = "Clerk Mentor ID must not be blank")
+    @Column(name = "clerk_mentor_id", nullable = false, unique = true)
+    private String clerkMentorId;
+
     @NotBlank(message = "First name must not be blank")
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -65,6 +69,10 @@ public class MentorEntity {
     @NotBlank(message = "Qualification must not be blank")
     @Column(name = "qualification", nullable = false)
     private String qualification;
+
+    @NotBlank(message = "Mentor image can not be blank")
+    @Column(name = "mentor-image", nullable = false)
+    private String mentorImage;
 
     @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
     private List<SessionEntity> sessionEntityList = new ArrayList<>();

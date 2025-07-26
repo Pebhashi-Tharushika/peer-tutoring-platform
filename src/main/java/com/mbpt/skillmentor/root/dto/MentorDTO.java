@@ -16,6 +16,10 @@ public class MentorDTO {
     @JsonProperty("mentor_id")
     private Integer mentorId;
 
+    @NotBlank(message = "Clerk mentor ID must not be blank")
+    @JsonProperty("clerk_mentor_id")
+    private String clerkMentorId;
+
     @NotBlank(message = "First name must not be blank")
     @JsonProperty("first_name")
     private String firstName;
@@ -57,6 +61,10 @@ public class MentorDTO {
     @NotBlank(message = "Qualification must not be blank")
     @JsonProperty("qualification")
     private String qualification;
+
+    @NotBlank(message = "Mentor image can not be blank")
+    @JsonProperty("mentor-image")
+    private String mentorImage;
 
     @NotNull(message = "Classroom ID must not be null")
     @JsonProperty("class_room_id")

@@ -5,4 +5,10 @@ public class Constants {
 
     public static final String ADMIN_ROLE_PERMISSION = "hasRole('ADMIN')";
     public static final String MODERATOR_ROLE_PERMISSION = "hasRole('MODERATOR')";
+
+    public enum SessionStatus {
+        PENDING,
+        ACCEPTED,
+        COMPLETED
+    }
 }

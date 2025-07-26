@@ -1,5 +1,6 @@
 package com.mbpt.skillmentor.root.entity;
 
+import com.mbpt.skillmentor.root.common.Constants;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -43,4 +44,9 @@ public class LiteSessionEntity {
     @NotNull(message = "End time must not be null")
     @Column(name = "end_time", nullable = false)
     private Instant endTime;
+
+    @NotNull(message = "Session status must not be null")
+    @Column(name = "session_status", nullable = false)
+    @Enumerated(EnumType.STRING) // Stores enum as a string in the database
+    private Constants.SessionStatus sessionStatus = Constants.SessionStatus.PENDING;
 }

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,7 +45,7 @@ public class SessionController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+//    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @PostMapping(value = "/session", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
     public ResponseEntity<SessionLiteDTO> createSession(
             @Parameter(description = "Session data to create", required = true)
@@ -57,28 +58,6 @@ public class SessionController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
-    @Operation(summary = "Get an academic session details by ID", description = "Retrieves a single academic session details using their unique ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Session retrieved successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid mentor ID"),
-            @ApiResponse(responseCode = "404", description = "Session not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @GetMapping("/session/{sessionId}")
-    public ResponseEntity<SessionDTO> getSessionById(
-            @Parameter(description = "ID of the academic session to retrieve", required = true)
-            @Min(value = 1, message = "Mentor ID must be a positive integer") @PathVariable Integer sessionId) {
-        final SessionDTO sessionDTO = sessionService.getSessionById(sessionId);
-        if (sessionDTO != null) {
-            return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
 
     @Operation(
             summary = "Get all sessions",
@@ -95,6 +74,48 @@ public class SessionController {
     public ResponseEntity<List<SessionDTO>> getAllSessions() {
         final List<SessionDTO> sessions = sessionService.getAllSessions();
         return new ResponseEntity<>(sessions, HttpStatus.OK);
+    }
+
+
+    @Operation(
+            summary = "Get all sessions for a student",
+            description = "Retrieves all academic sessions for a specific student"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Student sessions retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "No sessions found for the student"),
+            @ApiResponse(responseCode = "400", description = "Invalid student Clerk ID"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
+    })
+    @GetMapping(value = "/session/student/{clerkId}", produces = Constants.APPLICATION_JSON)
+    public ResponseEntity<List<SessionDTO>> getAllSessionsByStudentClerkID(
+            @Parameter(description = "Clerk ID of the student", required = true)
+            @PathVariable @NotBlank(message = "Student Clerk ID must not be blank") String clerkId) {
+        final List<SessionDTO> sessionDTOS = sessionService.getAllSessionsByStudentClerkId(clerkId);
+        return new ResponseEntity<>(sessionDTOS, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Update session status",
+            description = "Updates the status of an existing session"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Session status updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Session not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid session ID"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
+    })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+    @PutMapping(value = "/session/{sessionId}", produces = Constants.APPLICATION_JSON)
+    public ResponseEntity<SessionDTO> updateSessionStatus(
+            @Parameter(description = "ID of the session to update", required = true)
+            @PathVariable @Min(value = 1, message = "Session ID must be a positive integer") Integer sessionId,
+            @Parameter(description = "New status for the session", required = true)
+            @RequestParam @NotBlank(message = "Session status must not be blank") Constants.SessionStatus sessionStatus) {
+        final SessionDTO updatedSession = sessionService.updateSessionStatus(sessionId, sessionStatus);
+        return new ResponseEntity<>(updatedSession, HttpStatus.OK);
     }
 
 }

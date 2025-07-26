@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("/academic")
@@ -54,7 +56,7 @@ public class ClassRoomController {
             @ApiResponse(responseCode = "404", description = "No classrooms found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+//    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @GetMapping(value = "/classroom", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<List<ClassRoomDTO>> getAllClassRooms() {
         final List<ClassRoomDTO> allClassRooms = classRoomService.getAllClassRooms();
@@ -69,7 +71,7 @@ public class ClassRoomController {
             @ApiResponse(responseCode = "404", description = "Classroom not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+//    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @GetMapping(value = "/classroom/{id}", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<ClassRoomDTO> getClassRoomById(
             @Parameter(description = "ID of the classroom to retrieve", required = true)
