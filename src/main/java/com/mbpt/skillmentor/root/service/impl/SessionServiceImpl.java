@@ -7,11 +7,9 @@ import com.mbpt.skillmentor.root.dto.SessionDTO;
 import com.mbpt.skillmentor.root.dto.SessionLiteDTO;
 import com.mbpt.skillmentor.root.entity.LiteSessionEntity;
 import com.mbpt.skillmentor.root.entity.SessionEntity;
-import com.mbpt.skillmentor.root.entity.StudentEntity;
 import com.mbpt.skillmentor.root.mapper.AuditEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.LiteSessionEntityDTOMapper;
 import com.mbpt.skillmentor.root.mapper.SessionEntityDTOMapper;
-import com.mbpt.skillmentor.root.mapper.StudentEntityDTOMapper;
 import com.mbpt.skillmentor.root.repository.LiteSessionRepository;
 import com.mbpt.skillmentor.root.repository.SessionRepository;
 import com.mbpt.skillmentor.root.service.SessionService;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SessionServiceImpl implements SessionService {
