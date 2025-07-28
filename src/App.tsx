@@ -1,27 +1,50 @@
-import { Calendar } from "@/components/ui/calendar"
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-import { useState } from "react"
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import { BrowserRouter, Routes, Route } from "react-router";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import PaymentPage from "./pages/PaymentPage";
+import Layout from "./components/Layout";
 
 function App() {
-  const [date, setDate] = useState<Date>();
+
   return (
-    <>
-      <header>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </header>
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        className="rounded-lg border"
-      />
-    </>
-  )
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <>
+                <SignedIn>
+                  <DashboardPage />
+                </SignedIn>
+                <SignedOut>
+                  <LoginPage />
+                </SignedOut>
+              </>
+            }
+          />
+          <Route
+            path="/payment/:sessionId"
+            element={
+              <>
+                <SignedIn>
+                  <PaymentPage />
+                </SignedIn>
+                <SignedOut>
+                  <LoginPage />
+                </SignedOut>
+              </>
+            }
+          />
+          <Route path="*" element={<LoginPage />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
 }
 
 export default App
