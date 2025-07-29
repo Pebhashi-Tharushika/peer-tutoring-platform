@@ -34,7 +34,7 @@ export default function PaymentPage() {
   useEffect(() => {
     console.log(classroomID, mentorId, topic, date, sessionId);
     async function fetchData() {
-      const token = await getToken({ template: "skillmentor-auth-frontend" });
+      const token = await getToken();
       console.log("Fetching student data for user:", user?.id);
       console.log(token);
       const result = await fetch(
