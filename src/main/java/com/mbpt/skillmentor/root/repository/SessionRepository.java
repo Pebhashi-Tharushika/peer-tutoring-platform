@@ -7,16 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface SessionRepository extends JpaRepository<SessionEntity, Integer> {
-
-    @Query(value = "SELECT s.* FROM sessions s " +
-            "JOIN students stu " +
-            "ON s.student_id = stu.student_id " +
-            "WHERE stu.clerk_student_id=:studentClerkId", nativeQuery = true)
-    List<Object> findSessionsByStudentClerkId(@Param("studentClerkId") String studentClerkId);
 
     @Query(value = "SELECT m.mentor_id AS mentorId, " +
             "CONCAT(m.first_name, ' ', m.last_name) AS mentorName, " +

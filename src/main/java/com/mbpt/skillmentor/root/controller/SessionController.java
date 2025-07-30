@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -92,6 +93,7 @@ public class SessionController {
     public ResponseEntity<List<SessionDTO>> getAllSessionsByStudentClerkID(
             @Parameter(description = "Clerk ID of the student", required = true)
             @PathVariable @NotBlank(message = "Student Clerk ID must not be blank") String clerkId) {
+        System.out.println("Clerk ID: " + clerkId);
         final List<SessionDTO> sessionDTOS = sessionService.getAllSessionsByStudentClerkId(clerkId);
         return new ResponseEntity<>(sessionDTOS, HttpStatus.OK);
     }
@@ -111,9 +113,10 @@ public class SessionController {
     @PutMapping(value = "/session/{sessionId}", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<SessionDTO> updateSessionStatus(
             @Parameter(description = "ID of the session to update", required = true)
-            @PathVariable @Min(value = 1, message = "Session ID must be a positive integer") Integer sessionId,
+            @PathVariable @Min(value = 1, message = "Session ID must be a positive integer")
+            @NotNull(message = "Session ID must not be null") Integer sessionId,
             @Parameter(description = "New status for the session", required = true)
-            @RequestParam @NotBlank(message = "Session status must not be blank") Constants.SessionStatus sessionStatus) {
+            @RequestParam @NotNull(message = "Session status must not be null") Constants.SessionStatus sessionStatus) {
         final SessionDTO updatedSession = sessionService.updateSessionStatus(sessionId, sessionStatus);
         return new ResponseEntity<>(updatedSession, HttpStatus.OK);
     }

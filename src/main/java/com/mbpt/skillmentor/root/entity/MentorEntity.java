@@ -71,7 +71,7 @@ public class MentorEntity {
     private String qualification;
 
     @NotBlank(message = "Mentor image can not be blank")
-    @Column(name = "mentor-image", nullable = false)
+    @Column(name = "mentor_image", nullable = false)
     private String mentorImage;
 
     @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)

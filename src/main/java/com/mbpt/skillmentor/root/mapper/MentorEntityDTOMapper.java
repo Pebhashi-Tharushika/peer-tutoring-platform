@@ -20,7 +20,7 @@ public class MentorEntityDTOMapper {
         mentorDTO.setProfession(mentorEntity.getProfession());
         mentorDTO.setSubject(mentorEntity.getSubject());
         mentorDTO.setQualification(mentorEntity.getQualification());
-        mentorDTO.setMentorImage(mentorDTO.getMentorImage());
+        mentorDTO.setMentorImage(mentorEntity.getMentorImage());
         return mentorDTO;
     }
 

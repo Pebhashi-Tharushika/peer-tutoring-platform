@@ -45,17 +45,20 @@ public class MentorServiceImpl implements MentorService {
         log.debug("MentorDTO received: {}", mentorDTO);
 
         final MentorEntity mentorEntity = MentorEntityDTOMapper.map(mentorDTO);
+        final MentorEntity savedMentor;
         if (mentorDTO.getClassRoomId() != null) {
             final ClassRoomEntity classRoomEntity = classRoomRepository.findById(mentorDTO.getClassRoomId())
                     .orElseThrow(() -> new ClassRoomException("Classroom not found with ID: " + mentorDTO.getClassRoomId()));
             classRoomEntity.setMentor(mentorEntity);
-            final MentorEntity savedMentor = mentorRepository.save(mentorEntity);
+            savedMentor = mentorRepository.save(mentorEntity);
             classRoomRepository.save(classRoomEntity);
-            return MentorEntityDTOMapper.map(savedMentor);
+        }else {
+            savedMentor = mentorRepository.save(mentorEntity);
         }
-        final MentorEntity savedEntity = mentorRepository.save(mentorEntity);
-        log.info("Mentor created with ID: {} at data-source: {}", savedEntity.getMentorId(), this.datasource);
-        return MentorEntityDTOMapper.map(savedEntity);
+        log.info("Mentor created with ID: {} at data-source: {}", savedMentor.getMentorId(), this.datasource);
+        final MentorDTO savedMentorDTO = MentorEntityDTOMapper.map(savedMentor);
+            savedMentorDTO.setClassRoomId(mentorDTO.getClassRoomId());
+            return savedMentorDTO;
     }
 
     @Override

@@ -75,7 +75,7 @@ public class StudentController {
             @ApiResponse(responseCode = "404", description = "Student not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+//    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @GetMapping(value = "/student/{id}", produces = Constants.APPLICATION_JSON)
     public ResponseEntity<StudentDTO> getStudentByClerkId(
             @Parameter(description = "Student Clerk ID of the student to fetch", required = true)
