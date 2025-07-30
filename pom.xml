@@ -10,10 +10,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.mbpt.skillmentor</groupId>
-    <artifactId>root</artifactId>
+    <artifactId>peer-tutoring-platform-be</artifactId>
     <version>1.0.0</version>
-    <name>root</name>
-    <description>Demo project for Spring Boot</description>
+    <name>peertutoringplatform</name>
+    <description>Project for Spring Boot</description>
     <url/>
     <licenses>
         <license/>
