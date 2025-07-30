@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Building2, Calendar, GraduationCap } from "lucide-react";
+import { Building2, Calendar, GraduationCap, ShieldCheck, ThumbsUp } from "lucide-react";
 import { MentorClass } from "@/lib/types";
 import { SchedulingModal } from "@/components/SchedulingModel";
 import { SignupDialog } from "@/components/SignUpDialog";
@@ -33,12 +33,12 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
           <div className="flex justify-between items-start mb-4">
             <div className="space-y-2">
               <h3 className="font-semibold text-xl">{mentorClass.title}</h3>
-              {/* <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2">
                 <ThumbsUp className="size-6" />
                 <p className="text-sm text-muted-foreground">
-                  {mentorClass.enrolled_student_count} enrolled students
+                  {mentorClass.mentor.positive_reviews}% positive reviews
                 </p>
-              </div> */}
+              </div>
               <div className="flex items-center space-x-2">
                 <img
                   src={mentorClass.mentor.mentor_image}
@@ -108,12 +108,12 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
                 </span>
               </div>
 
-              {/* {mentor.isCertified && (
+              {mentorClass.mentor.is_certified && (
                 <div className="flex items-center space-x-2">
                   <ShieldCheck className="w-4 h-4" />
                   <span className="text-sm">Certified Teacher</span>
                 </div>
-              )}*/}
+              )}
             </div>
           </div>
         </div>

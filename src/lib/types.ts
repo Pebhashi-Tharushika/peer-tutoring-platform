@@ -48,6 +48,8 @@ export interface MentorClass {
     phone_number: string;
     qualification: string;
     mentor_image: string;
+    is_certified: boolean;
+    positive_reviews: number;
   };
 }
 
@@ -92,6 +94,8 @@ export interface Mentor {
   phone_number: string;
   qualification: string;
   mentor_image: string;
+  is_certified: boolean;
+  positive_reviews: number;
 }
 
 export enum SessionStatus {
