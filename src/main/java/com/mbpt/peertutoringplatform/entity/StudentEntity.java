@@ -1,10 +1,7 @@
 package com.mbpt.peertutoringplatform.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +38,7 @@ public class StudentEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Pattern(regexp = "^\\+[1-9]\\d{6,14}$", message = "Phone number must be valid E.164 format.")
     @NotBlank(message = "Phone number must not be blank")
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;

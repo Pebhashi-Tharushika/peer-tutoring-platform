@@ -39,8 +39,8 @@ public class ClassRoomServiceImpl implements ClassRoomService {
                 .map(
                         entity -> {
                             final ClassRoomDTO classRoomDTO = ClassRoomEntityDTOMapper.map(entity);
-                            if (entity.getMentor() != null) {
-                                final MentorDTO mentorDTO = MentorEntityDTOMapper.map(entity.getMentor());
+                            if (entity.getMentorEntity() != null) {
+                                final MentorDTO mentorDTO = MentorEntityDTOMapper.map(entity.getMentorEntity());
                                 classRoomDTO.setMentorDTO(mentorDTO);
                             }
                             return classRoomDTO;
@@ -56,8 +56,8 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         }
         ClassRoomEntity classRoom = classRoomEntity.get();
         ClassRoomDTO classRoomDTO = ClassRoomEntityDTOMapper.map(classRoom);
-        if (classRoom.getMentor() != null) {
-            MentorDTO mentorDTO = MentorEntityDTOMapper.map(classRoom.getMentor());
+        if (classRoom.getMentorEntity() != null) {
+            MentorDTO mentorDTO = MentorEntityDTOMapper.map(classRoom.getMentorEntity());
             classRoomDTO.setMentorDTO(mentorDTO);
         }
         return classRoomDTO;

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -45,20 +46,23 @@ public class MentorServiceImpl implements MentorService {
         log.debug("MentorDTO received: {}", mentorDTO);
 
         final MentorEntity mentorEntity = MentorEntityDTOMapper.map(mentorDTO);
-        final MentorEntity savedMentor;
-        if (mentorDTO.getClassRoomId() != null) {
-            final ClassRoomEntity classRoomEntity = classRoomRepository.findById(mentorDTO.getClassRoomId())
-                    .orElseThrow(() -> new ClassRoomException("Classroom not found with ID: " + mentorDTO.getClassRoomId()));
-            classRoomEntity.setMentor(mentorEntity);
-            savedMentor = mentorRepository.save(mentorEntity);
-            classRoomRepository.save(classRoomEntity);
-        }else {
-            savedMentor = mentorRepository.save(mentorEntity);
+        final MentorEntity savedMentor = mentorRepository.save(mentorEntity);
+        List<Integer> classRoomIdList = mentorDTO.getClassRoomIdList();
+        if (classRoomIdList != null && !classRoomIdList.isEmpty()) {
+            classRoomIdList.forEach(classRoomId -> {
+                if (Objects.nonNull(classRoomId)) {
+                    final ClassRoomEntity classRoomEntity = classRoomRepository.findById(classRoomId)
+                            .orElseThrow(() -> new ClassRoomException("Classroom not found with ID: " + classRoomId));
+                    classRoomEntity.setMentorEntity(mentorEntity);
+                    classRoomRepository.save(classRoomEntity);
+                }
+            });
+
         }
         log.info("Mentor created with ID: {} at data-source: {}", savedMentor.getMentorId(), this.datasource);
         final MentorDTO savedMentorDTO = MentorEntityDTOMapper.map(savedMentor);
-            savedMentorDTO.setClassRoomId(mentorDTO.getClassRoomId());
-            return savedMentorDTO;
+        savedMentorDTO.setClassRoomIdList(classRoomIdList);
+        return savedMentorDTO;
     }
 
     @Override

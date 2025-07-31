@@ -1,10 +1,8 @@
 package com.mbpt.peertutoringplatform.entity;
 
+import com.mbpt.peertutoringplatform.common.Constants;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,7 +34,7 @@ public class MentorEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Email(message = "Invalid email format")
+    @Email(message = "Email must be valid")
     @NotBlank(message = "Email must not be blank")
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -45,13 +43,15 @@ public class MentorEntity {
     @Column(name = "address", nullable = false)
     private String address;
 
+    @Pattern(regexp = "^\\+[1-9]\\d{6,14}$", message = "Phone number must be valid E.164 format.")
     @NotBlank(message = "Phone number must not be blank")
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @NotBlank(message = "Title must not be blank")
     @Column(name = "title", nullable = false)
-    private String title;
+    @Enumerated(EnumType.STRING)
+    private Constants.Title title;
 
     @NotNull(message = "Session fee must not be null")
     @Min(value = 0, message = "Session fee must be non-negative")
@@ -70,10 +70,13 @@ public class MentorEntity {
     @Column(name = "qualification", nullable = false)
     private String qualification;
 
-    @NotBlank(message = "Mentor image can not be blank")
+    @NotBlank(message = "Mentor image URL must not be blank")
     @Column(name = "mentor_image", nullable = false)
     private String mentorImage;
 
     @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
     private List<SessionEntity> sessionEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
+    private List<ClassRoomEntity> classRoomEntityList = new ArrayList<>();
 }
