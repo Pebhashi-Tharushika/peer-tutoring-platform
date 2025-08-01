@@ -74,6 +74,10 @@ public class MentorEntity {
     @Column(name = "mentor_image", nullable = false)
     private String mentorImage;
 
+    @NotNull(message="Certification status must not be null")
+    @Column(name="is_certified", nullable = false)
+    private Boolean isCertified;
+
     @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
     private List<SessionEntity> sessionEntityList = new ArrayList<>();
 

@@ -23,20 +23,23 @@ public interface StudentService {
     /**
      * Retrieves all students, optionally filtered by age.
      *
-     * @param address the address to filter students by (optional)
-     * @param age     the age to filter students by (optional)
+     *
      * @return a list of StudentDTO objects representing the students
      */
-    List<StudentDTO> getAllStudents(List<String> address, List<Integer> age, List<String> firstNames);
+    List<StudentDTO> getAllStudents();
 
 
-    /**
-     * Retrieves a student by student ID.
-     *
-     * @param id the ID of the student to retrieve
-     * @return a StudentDTO object representing the student
-     */
-    StudentDTO findStudentById(Integer id);
+
+//    /**
+//     * Retrieves all students, optionally filtered by age.
+//     *
+//     * @param address the address to filter students by (optional)
+//     * @param age     the age to filter students by (optional)
+//     * @return a list of StudentDTO objects representing the students
+//     */
+//    List<StudentDTO> getAllStudents(List<String> address, List<Integer> age, List<String> firstNames);
+
+
 
     /**
      * Retrieves a student by Clerk ID.
@@ -54,14 +57,6 @@ public interface StudentService {
      */
     StudentDTO updateStudentById(StudentDTO studentDTO);
 
-
-    /**
-     * Deletes a student by their ID.
-     *
-     * @param id the ID of the student to delete
-     * @return a StudentDTO object representing the deleted student
-     */
-    StudentDTO deleteStudentById(Integer id);
 
 
     /**

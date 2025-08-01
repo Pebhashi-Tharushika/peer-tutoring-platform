@@ -1,6 +1,6 @@
 package com.mbpt.peertutoringplatform.exception;
 
-public class MentorException extends Exception {
+public class MentorException extends RuntimeException {
     public MentorException(String message) {
         super(message);
     }

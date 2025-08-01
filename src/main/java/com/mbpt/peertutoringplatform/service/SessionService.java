@@ -21,7 +21,7 @@ public interface SessionService {
      * @param sessionDTO the session data transfer object containing session details
      * @return the created {@link SessionDTO } with its generated ID and saved values
      */
-    public abstract SessionLiteDTO createSession(SessionLiteDTO sessionDTO);
+    SessionLiteDTO createSession(SessionLiteDTO sessionDTO);
 
 
     /**
@@ -30,7 +30,7 @@ public interface SessionService {
      * @param sessionId the ID of the session to retrieve
      * @return a SessionDTO object representing the session
      */
-    public abstract SessionDTO getSessionById(Integer sessionId);
+    SessionDTO getSessionById(Integer sessionId);
 
 
     /**
@@ -38,7 +38,7 @@ public interface SessionService {
      *
      * @return a list of {@link SessionDTO} instances representing the sessions
      */
-    public abstract List<SessionDTO> getAllSessions();
+    List<SessionDTO> getAllSessions();
 
 
     /**
@@ -65,7 +65,7 @@ public interface SessionService {
      *
      * @return a list of {@link AuditDTO} instances representing the session audit DTOs
      */
-    public abstract List<AuditDTO> getAllAudits();
+    List<AuditDTO> getAllAudits();
 
 
     /**
@@ -78,5 +78,5 @@ public interface SessionService {
      * @param endDate   the end date of the time period (inclusive), in ISO format (e.g., "2025-01-31")
      * @return a list of {@link PaymentDTO} instances representing the payments made to mentors
      */
-    public abstract List<PaymentDTO> findMentorPayments(String startDate, String endDate);
+    List<PaymentDTO> findMentorPayments(String startDate, String endDate);
 }

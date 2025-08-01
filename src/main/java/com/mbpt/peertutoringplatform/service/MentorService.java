@@ -1,7 +1,7 @@
 package com.mbpt.peertutoringplatform.service;
 
-import com.mbpt.peertutoringplatform.exception.MentorException;
 import com.mbpt.peertutoringplatform.dto.MentorDTO;
+import com.mbpt.peertutoringplatform.dto.MentorProfileDTO;
 
 import java.util.List;
 
@@ -22,56 +22,43 @@ public interface MentorService {
 
 
     /**
-     * Retrieves all mentors, optionally filtered by age.
+     * Retrieves a list of mentors filtered by optional criteria such as name, classroom title, profession and
+     * verification status.
      *
-     * @param firstNames first name of the mentors to retrieve
-     * @param subjects   subject of the mentors to retrieve
-     * @return a list of MentorDTO objects representing the mentors
+     * @param name       the name (or partial name) of the mentor to search for (optional)
+     * @param classroom  the title of the classroom conducted by the mentor (optional)
+     * @param profession the profession of the mentor (optional)
+     * @param isVerified whether the mentor is certified (optional)
+     * @return a list of {@link MentorDTO} objects that match the given filters
      */
-    List<MentorDTO> getAllMentors(List<String> firstNames, List<String> subjects);
-
-
-    /**
-     * Retrieves a mentor by mentor ID.
-     *
-     * @param id the ID of the mentor to retrieve
-     * @return a MentorDTO object representing the mentor
-     */
-    MentorDTO findMentorById(Integer id) throws MentorException;
+    List<MentorDTO> getAllMentors(String name, String classroom, String profession, Boolean isVerified);
 
 
     /**
      * Retrieves a mentor by mentor Clerk ID.
      *
      * @param clerkId the ID generated for the mentor by Clerk, to retrieve
-     * @return a MentorDTO object representing the mentor
+     * @return a {@link MentorDTO } object representing the mentor
      */
-    MentorDTO findMentorByClerkId(String clerkId) throws MentorException;
+    MentorDTO findMentorByClerkId(String clerkId);
 
 
     /**
      * Updates an existing mentor's details.
      *
      * @param mentorDTO the data transfer object containing updated mentor details
-     * @return a MentorDTO object representing the updated mentor
+     * @return a {@link MentorDTO } object representing the updated mentor
      */
-    MentorDTO updateMentorById(MentorDTO mentorDTO) throws MentorException;
+    MentorDTO updateMentorById(MentorDTO mentorDTO);
 
-
-    /**
-     * Deletes a mentor by their ID.
-     *
-     * @param id the ID of the mentor to delete
-     * @return a MentorDTO object representing the deleted mentor
-     */
-    MentorDTO deleteMentorById(Integer id) throws MentorException;
 
     /**
      * Delete a mentor by their Clerk ID.
      *
      * @param clerkId the ID generated for the mentor by clerk, to delete
-     * @return a MentorDTO object representing the deleted mentor
+     * @return a {@link MentorDTO } object representing the deleted mentor
      */
-    MentorDTO deleteMentorByClerkId(String clerkId) throws MentorException;
+    MentorDTO deleteMentorByClerkId(String clerkId);
 
+    MentorProfileDTO getMentorProfile(Integer id);
 }

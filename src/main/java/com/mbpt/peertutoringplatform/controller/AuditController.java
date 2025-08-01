@@ -1,6 +1,5 @@
 package com.mbpt.peertutoringplatform.controller;
 
-import com.mbpt.peertutoringplatform.common.Constants;
 import com.mbpt.peertutoringplatform.dto.AuditDTO;
 import com.mbpt.peertutoringplatform.dto.PaymentDTO;
 import com.mbpt.peertutoringplatform.service.SessionService;
@@ -10,7 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(value = "/admin")
 @Tag(name = "Audit & Mentor Payments", description = "Endpoints for viewing audit logs and mentor payment reports")
@@ -45,7 +47,7 @@ public class AuditController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-    @GetMapping(value = "/audit", produces = Constants.APPLICATION_JSON)
+    @GetMapping(value = "/audit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AuditDTO>> getAllAudits() {
         final List<AuditDTO> auditDTOS = sessionService.getAllAudits();
         return new ResponseEntity<>(auditDTOS, HttpStatus.OK);
@@ -67,11 +69,11 @@ public class AuditController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-    @GetMapping(value = "/mentor-payments", produces = Constants.APPLICATION_JSON)
+    @GetMapping(value = "/mentor-payments", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PaymentDTO>> findMentorPayments(
-            @Parameter(description = "Start date in yyyy-MM-dd format", required = false)
+            @Parameter(description = "Start date in yyyy-MM-dd format")
             @RequestParam(name = "startDate", required = false) String startDate,
-            @Parameter(description = "End date in yyyy-MM-dd format", required = false)
+            @Parameter(description = "End date in yyyy-MM-dd format")
             @RequestParam(name = "endDate", required = false) String endDate) {
         final List<PaymentDTO> auditDTOS = sessionService.findMentorPayments(startDate, endDate);
         return new ResponseEntity<>(auditDTOS, HttpStatus.OK);

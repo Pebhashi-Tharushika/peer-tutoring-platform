@@ -19,4 +19,7 @@ public interface SessionRepository extends JpaRepository<SessionEntity, Integer>
             "WHERE s.start_time BETWEEN :startTime AND :endTime " +
             "GROUP BY m.mentor_id;", nativeQuery = true)
     List<Object> findMentorPayments(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+
+    Long countByClassRoomEntity_ClassRoomIdAndMentorEntity_MentorId(Integer classRoomId, Integer mentorId);
 }

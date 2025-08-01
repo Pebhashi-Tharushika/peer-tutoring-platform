@@ -10,7 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @Validated
 @RestController
 @RequestMapping("/academic")
@@ -32,21 +33,22 @@ public class ClassRoomController {
         this.classRoomService = classRoomService;
     }
 
-    @Operation(summary = "Create a new classroom", description = "Creates a new classroom along with its mentor(s)")
+    @Operation(summary = "Create a new classroom", description = "Accepts a Classroom JSON and creates a new classroom record")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Classroom successfully created"),
-            @ApiResponse(responseCode = "400", description = "Bad request - Invalid data"),
+            @ApiResponse(responseCode = "200", description = "Classroom created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid classroom data"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @PostMapping(value = "/classroom", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
+    @PostMapping(value = "/classroom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> createClassRoom(
             @Parameter(description = "Classroom details to create", required = true)
             @Valid @RequestBody ClassRoomDTO classRoomDTO) {
-        final ClassRoomDTO createdClassRoom = classRoomService.createClassRoom(classRoomDTO);
-        return ResponseEntity.ok(createdClassRoom);
+        ClassRoomDTO createdClassRoom = classRoomService.createClassRoom(classRoomDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdClassRoom);
     }
 
 
@@ -54,65 +56,78 @@ public class ClassRoomController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Classroom list retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "No classrooms found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-//    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @GetMapping(value = "/classroom", produces = Constants.APPLICATION_JSON)
+    @GetMapping(value = "/classroom", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ClassRoomDTO>> getAllClassRooms() {
         final List<ClassRoomDTO> allClassRooms = classRoomService.getAllClassRooms();
-        return ResponseEntity.ok(allClassRooms);
+        return ResponseEntity.status(HttpStatus.OK).body(allClassRooms);
     }
 
 
-    @Operation(summary = "Get classroom by ID", description = "Fetches a classroom using its unique identifier")
+    @Operation(
+            summary = "Search classrooms by ID or title",
+            description = "Fetches a list of classrooms that match the given ID."
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Classroom retrieved successfully"),
-            @ApiResponse(responseCode = "400", description = "Bad request - Invalid ID"),
-            @ApiResponse(responseCode = "404", description = "Classroom not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Classroom/Classrooms retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid classroom data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "No classrooms found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-//    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @GetMapping(value = "/classroom/{id}", produces = Constants.APPLICATION_JSON)
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+    @GetMapping(value = "/classroom/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> getClassRoomById(
             @Parameter(description = "ID of the classroom to retrieve", required = true)
-            @Min(value = 1, message = "Classroom ID must be positive")
-            @PathVariable Integer id) {
-        final ClassRoomDTO classRoomDTO = classRoomService.findClassRoomById(id);
-        return ResponseEntity.ok(classRoomDTO);
+            @Min(value = 1, message = "Classroom ID must be positive value")
+            @PathVariable @NotNull(message = "classroom ID must not be null") Integer id
+    ) {
+        ClassRoomDTO classroom = classRoomService.findClassRoomById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(classroom);
     }
 
 
     @Operation(summary = "Update classroom", description = "Updates an existing classroom's details")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Classroom updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Bad request - Invalid data"),
+            @ApiResponse(responseCode = "400", description = "Invalid classroom data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Classroom not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @PutMapping(value = "/classroom", consumes = Constants.APPLICATION_JSON, produces = Constants.APPLICATION_JSON)
+    @PutMapping(value = "/classrooms", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> updateClassRoom(
             @Parameter(description = "Classroom details to update", required = true)
             @Valid @RequestBody ClassRoomDTO classRoomDTO) {
-        final ClassRoomDTO updatedClassRoom = classRoomService.updateClassRoomById(classRoomDTO);
-        return ResponseEntity.ok(updatedClassRoom);
+        ClassRoomDTO updatedClassRoom = classRoomService.updateClassRoomById(classRoomDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedClassRoom);
     }
 
 
     @Operation(summary = "Delete classroom by ID", description = "Deletes a classroom and its associated data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Classroom deleted successfully"),
-            @ApiResponse(responseCode = "400", description = "Bad request - Invalid ID"),
+            @ApiResponse(responseCode = "400", description = "Invalid classroom ID"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Classroom not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @DeleteMapping(value = "/classroom/{id}", produces = Constants.APPLICATION_JSON)
+    @DeleteMapping(value = "/classroom/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> deleteClassRoom(
             @Parameter(description = "ID of the classroom to delete", required = true)
             @Min(value = 1, message = "Classroom ID must be positive")
             @PathVariable Integer id) {
-        final ClassRoomDTO deletedClassRoom = classRoomService.deleteClassRoomById(id);
-        return ResponseEntity.ok(deletedClassRoom);
+        ClassRoomDTO deletedClassRoom = classRoomService.deleteClassRoomById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(deletedClassRoom);
     }
 }
