@@ -34,11 +34,11 @@ export default function PaymentPage() {
   useEffect(() => {
     console.log(classroomID, mentorId, topic, date, sessionId);
     async function fetchData() {
-      const token = await getToken();
+      const token = await getToken({ template: "skillmentor-auth-frontend" });
       console.log("Fetching student data for user:", user?.id);
       console.log(token);
       const result = await fetch(
-        `${BACKEND_URL}/academic/student/${user?.id}`,
+        `${BACKEND_URL}/academic/student/${user?.id}`, // Get student by clerk ID
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ export default function PaymentPage() {
       setStudent(studentData);
 
       const result2 = await fetch(
-        `${BACKEND_URL}/academic/classroom/${classroomID}`,
+        `${BACKEND_URL}/academic/classroom/${classroomID}`, // Get classroom by ID
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -130,9 +130,9 @@ export default function PaymentPage() {
         topic: topic,
       };
 
-      const token = await getToken();
+      const token = await getToken({ template: "skillmentor-auth-frontend" });
 
-      const result = await fetch(`${BACKEND_URL}/academic/session`, {
+      const result = await fetch(`${BACKEND_URL}/academic/session`, { // create a new session
         method: "POST",
         headers: {
           "Content-Type": "application/json",

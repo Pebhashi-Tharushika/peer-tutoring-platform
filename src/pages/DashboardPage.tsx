@@ -26,14 +26,14 @@ export default function DashboardPage() {
         first_name: user.firstName,
         last_name: user.lastName,
         email: user.primaryEmailAddress?.emailAddress,
-        phone_number: "-",
+        phone_number: "+9473456472",
         address: "-",
         age: 20,
       };
 
       try {
         // Perform API call to create/fetch user in backend
-        const createdUser = await fetch(`${BACKEND_URL}/academic/student`, {
+        const createdUser = await fetch(`${BACKEND_URL}/academic/student`, {  // fetch the student details from Clerk and create student in DB
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -65,13 +65,13 @@ export default function DashboardPage() {
     async function fetchSessions() {
       if (!user) return;
 
-      const token = await getToken();
+      const token = await getToken({ template: "skillmentor-auth-frontend" });
       if (!token) return;
 
       try {
         console.log("User ID:", user.id);
         const response = await fetch(
-          `${BACKEND_URL}/academic/session/student/${user.id}`,
+          `${BACKEND_URL}/academic/session/student/${user.id}`, // fetch the sessions for the student by Clerk ID
           {
             headers: {
               Authorization: `Bearer ${token}`,

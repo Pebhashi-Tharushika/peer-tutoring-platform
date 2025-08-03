@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <main>{children}</main>
         <Footer />
       </section>
-      <Toaster richColors position="bottom-center" />
+      <Toaster richColors duration={1700} />
     </>
   );
 }

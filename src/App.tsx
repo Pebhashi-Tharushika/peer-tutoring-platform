@@ -5,6 +5,8 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import PaymentPage from "./pages/PaymentPage";
 import Layout from "./components/Layout";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AuthRedirect from "./components/AuthRedirect";
 
 function App() {
 
@@ -14,12 +16,26 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/redirect" element={<AuthRedirect />} />
           <Route
             path="/dashboard"
             element={
               <>
                 <SignedIn>
                   <DashboardPage />
+                </SignedIn>
+                <SignedOut>
+                  <LoginPage />
+                </SignedOut>
+              </>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <>
+                <SignedIn>
+                  <AdminDashboardPage />
                 </SignedIn>
                 <SignedOut>
                   <LoginPage />
