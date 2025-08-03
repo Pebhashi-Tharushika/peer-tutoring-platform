@@ -7,6 +7,7 @@ import PaymentPage from "./pages/PaymentPage";
 import Layout from "./components/Layout";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AuthRedirect from "./components/AuthRedirect";
+import RoleGate from "./components/RoleGate";
 
 function App() {
 
@@ -22,7 +23,9 @@ function App() {
             element={
               <>
                 <SignedIn>
-                  <DashboardPage />
+                  <RoleGate requiredRole="student">
+                    <DashboardPage />
+                  </RoleGate>
                 </SignedIn>
                 <SignedOut>
                   <LoginPage />
@@ -35,7 +38,9 @@ function App() {
             element={
               <>
                 <SignedIn>
-                  <AdminDashboardPage />
+                  <RoleGate requiredRole="admin">
+                    <AdminDashboardPage />
+                  </RoleGate>
                 </SignedIn>
                 <SignedOut>
                   <LoginPage />
