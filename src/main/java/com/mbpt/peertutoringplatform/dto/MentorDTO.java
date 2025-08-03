@@ -1,6 +1,5 @@
 package com.mbpt.peertutoringplatform.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mbpt.peertutoringplatform.common.Constants;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -84,8 +83,12 @@ public class MentorDTO {
     private String mentorImage;
 
     @JsonProperty("is_certified")
-    @Schema(description="whether the mentor is certified", example="true")
+    @Schema(description = "whether the mentor is certified", example = "true")
     private Boolean isCertified;
+
+    @JsonProperty("positive_reviews")
+    @Schema(description = "The percentage of positive reviews received by the mentor, ranging from 0 to 100.")
+    private Integer positiveReviews;
 
     @NotNull(message = "The list of Classrooms' ID must not be null")
     @JsonProperty("classrooms")

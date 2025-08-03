@@ -22,6 +22,7 @@ public class MentorEntityDTOMapper {
         mentorDTO.setQualification(mentorEntity.getQualification());
         mentorDTO.setMentorImage(mentorEntity.getMentorImage());
         mentorDTO.setIsCertified(mentorEntity.getIsCertified());
+        mentorDTO.setPositiveReviews(mentorEntity.getPositiveReviews());
         return mentorDTO;
     }
 
@@ -41,6 +42,7 @@ public class MentorEntityDTOMapper {
         mentorEntity.setQualification(mentorDTO.getQualification());
         mentorEntity.setMentorImage(mentorDTO.getMentorImage());
         mentorEntity.setIsCertified(mentorDTO.getIsCertified());
+        mentorEntity.setPositiveReviews(mentorDTO.getPositiveReviews());
         return mentorEntity;
     }
 }

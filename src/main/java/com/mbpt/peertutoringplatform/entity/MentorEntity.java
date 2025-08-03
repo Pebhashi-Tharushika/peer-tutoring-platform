@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class MentorEntity {
     private String profession;
 
     @NotBlank(message = "Subject must not be blank")
-    @Column(name = "subject", nullable = false)
+    @Column(name = "subject", nullable = false, length = 800)
     private String subject;
 
     @NotBlank(message = "Qualification must not be blank")
@@ -74,13 +75,19 @@ public class MentorEntity {
     @Column(name = "mentor_image", nullable = false)
     private String mentorImage;
 
-    @NotNull(message="Certification status must not be null")
-    @Column(name="is_certified", nullable = false)
+    @NotNull(message = "Certification status must not be null")
+    @Column(name = "is_certified", nullable = false)
     private Boolean isCertified;
+
+    @Min(value = 0, message = "positive reviews percentage must be non-negative")
+    @NotNull(message = "positive reviews percentage must not be null")
+    @Column(name = "positive_reviews", nullable = false)
+    private Integer positiveReviews;
 
     @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
     private List<SessionEntity> sessionEntityList = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
     private List<ClassRoomEntity> classRoomEntityList = new ArrayList<>();
 }

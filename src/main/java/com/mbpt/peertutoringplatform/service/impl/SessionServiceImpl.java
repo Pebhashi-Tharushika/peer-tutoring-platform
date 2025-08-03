@@ -82,7 +82,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     @Transactional(readOnly = true)
     public List<SessionDTO> getAllSessionsByStudentClerkId(String studentClerkId) {
-        log.info("Fetching session by student ID...");
+        log.info("Fetching session by student Clerk ID...");
         List<SessionEntity> sessionEntities = sessionRepository.findAll();
         List<SessionDTO> sessionDTOS = sessionEntities.stream()
                 .filter(sessionEntity -> sessionEntity.getStudentEntity().getClerkStudentId().equals(studentClerkId))

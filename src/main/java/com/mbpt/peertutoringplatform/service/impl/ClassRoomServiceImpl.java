@@ -89,7 +89,10 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         return classRoomRepository.findById(id)
                 .map(classRoom -> {
                     log.info("Classroom found: {}", classRoom);
-                    return ClassRoomEntityDTOMapper.map(classRoom);
+                    ClassRoomDTO classRoomDTO = ClassRoomEntityDTOMapper.map(classRoom);
+                    MentorDTO mentorDTO = MentorEntityDTOMapper.map(classRoom.getMentorEntity());
+                    classRoomDTO.setMentorDTO(mentorDTO);
+                    return classRoomDTO;
                 })
                 .orElseThrow(() -> {
                     log.error("Classroom not found with ID: {} from data-source:{}", id, this.datasource);

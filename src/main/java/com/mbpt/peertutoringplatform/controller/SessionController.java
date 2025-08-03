@@ -47,8 +47,8 @@ public class SessionController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-    @PreAuthorize(Constants.ADMIN_OR_STUDENT_PERMISSION)
-    @PostMapping(value = "/sessions", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize(Constants.STUDENT_ROLE_PERMISSION)
+    @PostMapping(value = "/session", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SessionLiteDTO> createSession(
             @Parameter(description = "Session data to create", required = true)
             @Valid @RequestBody SessionLiteDTO sessionDTO) {
@@ -67,6 +67,7 @@ public class SessionController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
+    @PreAuthorize(Constants.STUDENT_ROLE_PERMISSION)
     @GetMapping(value = "/session/student/{clerkId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SessionDTO>> getAllSessionsByStudentClerkID(
             @Parameter(description = "Clerk ID of the student", required = true)

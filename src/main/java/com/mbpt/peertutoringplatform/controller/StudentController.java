@@ -42,7 +42,7 @@ public class StudentController {
             @ApiResponse(responseCode = "503", description = "Service unavailable")
 
     })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+    @PreAuthorize(Constants.STUDENT_ROLE_PERMISSION)
     @PostMapping(value = "/student", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StudentDTO> createStudent(
             @Parameter(description = "Student details to create", required = true)
@@ -95,7 +95,7 @@ public class StudentController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+    @PreAuthorize(Constants.STUDENT_ROLE_PERMISSION)
     @GetMapping(value = "/student/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StudentDTO> getStudentByClerkId(
             @Parameter(description = "Student Clerk ID of the student to retrieve", required = true)

@@ -79,7 +79,7 @@ public class ClassRoomController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+    @PreAuthorize(Constants.STUDENT_ROLE_PERMISSION)
     @GetMapping(value = "/classroom/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> getClassRoomById(
             @Parameter(description = "ID of the classroom to retrieve", required = true)
