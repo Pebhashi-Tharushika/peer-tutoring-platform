@@ -33,7 +33,7 @@ export function SignupDialog({ isOpen, onClose }: SignupDialogProps) {
         <DialogDescription className="sr-only">
           Sign up dialog to access SkillMentor's tutor booking features
         </DialogDescription>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 p-4">
           {[
             AWSCertified1Img,
             AWSCertified2Img,
