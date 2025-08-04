@@ -8,6 +8,7 @@ import Layout from "./components/Layout";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AuthRedirect from "./components/AuthRedirect";
 import RoleGate from "./components/RoleGate";
+import PendingAccessPage from "./pages/PendingAccessPage";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/redirect" element={<AuthRedirect />} />
+          <Route path="/pending-access" element={<PendingAccessPage />} />
           <Route
             path="/dashboard"
             element={

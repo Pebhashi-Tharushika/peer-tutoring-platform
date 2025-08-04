@@ -11,13 +11,20 @@ export default function AuthRedirect() {
 
         const role = user?.publicMetadata?.role;
 
-        if (user) { // Only redirect if a user is signed in
+        if (user) { 
+
+            if (!role) {
+                router("/pending-access");
+                return;
+            }
+
             if (role !== "admin") {
                 router("/dashboard");
             } else {
                 router("/admin");
             }
         }
+
     }, [isLoaded, user]);
 
     return null;;
