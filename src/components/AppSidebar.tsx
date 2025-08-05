@@ -3,12 +3,9 @@
 
 import * as React from "react"
 import {
-  Frame,
   GalleryVerticalEnd,
   LayoutDashboard,
-  Map,
   MessagesSquare,
-  PieChart,
   School,
   UserPen,
   Users,
@@ -31,19 +28,19 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { SidebarSection } from "./SidebarSection"
+import { Link } from "react-router"
 
 
 const data = {
   academic: [
     {
       title: "Classroom",
-      url: "/admin/classroom",
       icon: School,
       isActive: true,
       items: [
         {
           title: "All Classes",
-          url: "#",
+          url: "/admin/classroom/all",
         },
         {
           title: "Assignments",
@@ -61,12 +58,11 @@ const data = {
     },
     {
       title: "Mentor",
-      url: "/admin/mentor",
       icon: UserPen,
       items: [
         {
-          title: "Mentor Profiles",
-          url: "#",
+          title: "All Mentors",
+          url: "/admin/mentor/all",
         },
         {
           title: "Certification",
@@ -80,12 +76,11 @@ const data = {
     },
     {
       title: "Bookings",
-      url: "/admin/session",
       icon: CalendarClock,
       items: [
         {
           title: "All Sessions",
-          url: "#",
+          url: "/admin/session/all",
         },
         {
           title: "Booking status",
@@ -103,12 +98,11 @@ const data = {
     },
     {
       title: "Student",
-      url: "/admin/student",
       icon: NotebookPen,
       items: [
         {
           title: "All Students",
-          url: "#",
+          url: "/admin/student/all",
         },
         {
           title: "Enrollments",
@@ -162,7 +156,7 @@ const data = {
   other:[
     {
       title: "Setting",
-      url: "#",
+      url: "/setting",
       icon: Settings,
       items: [
         {
@@ -198,14 +192,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link to="#">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <GalleryVerticalEnd className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-medium">ADMINISTRATION</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

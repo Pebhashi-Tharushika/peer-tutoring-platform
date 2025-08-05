@@ -20,7 +20,7 @@ import {
 
 type Item = {
   title: string
-  url: string
+  url?: string
   icon?: LucideIcon
   isActive?: boolean
   items?: {
@@ -52,13 +52,11 @@ export function SidebarSection({
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                    <SidebarMenuButton asChild tooltip={item.title}>
-                    <Link to={item.url} className="flex items-center gap-2 w-full">
-                        {item.icon && <item.icon className="shrink-0" />}
-                        <span className="truncate">{item.title}</span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </Link>
-                    </SidebarMenuButton>
+                  <SidebarMenuButton tooltip={item.title}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                     <SidebarMenuSub>
@@ -78,10 +76,10 @@ export function SidebarSection({
           ) : (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild tooltip={item.title}>
-                <a href={item.url}>
+                <Link to={item.url || "#"} className="flex items-center gap-2 w-full">
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                </a>
+                  <span className="truncate">{item.title}</span>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           )

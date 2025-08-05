@@ -1,4 +1,3 @@
-import { AppSidebar } from "@/components/AppSidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,14 +9,12 @@ import {
 import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
-  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 export default function AdminDashboardPage() {
   return (
-    <SidebarProvider defaultOpen className="w-auto">
-      <AppSidebar side="right" collapsible="icon" className="sticky" />
+    <div>
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b">
           <div className="flex items-center gap-2 px-3">
@@ -47,6 +44,6 @@ export default function AdminDashboardPage() {
           <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
         </div>
       </SidebarInset>
-    </SidebarProvider>
+    </div>
   )
 }

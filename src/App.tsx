@@ -9,6 +9,11 @@ import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AuthRedirect from "./components/AuthRedirect";
 import RoleGate from "./components/RoleGate";
 import PendingAccessPage from "./pages/PendingAccessPage";
+import ClassroomPage from "./pages/ClassroomPage";
+import SessionPage from "./pages/SessionPage";
+import MentorPage from "./pages/MentorPage";
+import StudentPage from "./pages/StudentPage";
+import AdminLayout from "./components/AdminLayout";
 
 function App() {
 
@@ -35,21 +40,17 @@ function App() {
               </>
             }
           />
-          <Route
-            path="/admin"
-            element={
-              <>
-                <SignedIn>
-                  <RoleGate requiredRole="admin">
-                    <AdminDashboardPage />
-                  </RoleGate>
-                </SignedIn>
-                <SignedOut>
-                  <LoginPage />
-                </SignedOut>
-              </>
-            }
-          />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={
+              <RoleGate requiredRole="admin">
+                <AdminDashboardPage />
+              </RoleGate>
+            } />
+            <Route path="/admin/classroom/all" element={<ClassroomPage />} />
+            <Route path="/admin/session/all" element={<SessionPage />} />
+            <Route path="/admin/mentor/all" element={<MentorPage />} />
+            <Route path="/admin/student/all" element={<StudentPage />} />
+          </Route>
           <Route
             path="/payment/:sessionId"
             element={
