@@ -75,7 +75,7 @@ const data = {
       ],
     },
     {
-      title: "Bookings",
+      title: "Booking",
       icon: CalendarClock,
       items: [
         {
