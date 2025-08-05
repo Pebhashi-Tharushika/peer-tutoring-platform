@@ -48,13 +48,7 @@ export default function PaymentPage() {
       if (!result.ok) {
         const errorText = await result.text();
         console.error("Student fetch failed:", errorText);
-        toast.error("Error", {
-          description: "Failed to fetch student data. Please try again later.",
-          cancel: {
-            label: 'Cancel',
-            onClick: () => { },
-          },
-        });
+        toast.error("Error", {description: "Failed to fetch student data. Please try again later."});
         navigate("/dashboard");
         return;
       }
@@ -73,13 +67,7 @@ export default function PaymentPage() {
       if (!result2.ok) {
         const errorText = await result2.text();
         console.error("classroom fetch failed:", errorText);
-        toast.error("Error", {
-          description: "Failed to fetch mentor class data. Please try again later.",
-          cancel: {
-            label: 'Cancel',
-            onClick: () => { },
-          },
-        });
+        toast.error("Error", {description: "Failed to fetch mentor class data. Please try again later."});
         navigate("/dashboard");
         return;
       }
@@ -144,25 +132,13 @@ export default function PaymentPage() {
       if (!result.ok) {
         throw new Error("Failed to create session");
       }
-      toast.success("Payment Confirmed", {
-        description: "Your bank slip has been uploaded and verified. Session scheduled successfully.",
-        cancel: {
-          label: 'Cancel',
-          onClick: () => { },
-        },
-      });
+      toast.success("Payment Confirmed", {description: "Your bank slip has been uploaded and verified. Session scheduled successfully."});
 
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
     } catch (error) {
-      toast.error("Error", {
-        description: "There was a problem scheduling your session. Please try again later.",
-        cancel: {
-          label: 'Cancel',
-          onClick: () => { },
-        },
-      });
+      toast.error("Error", {description: "There was a problem scheduling your session. Please try again later."});
       setIsUploading(false);
     }
   };

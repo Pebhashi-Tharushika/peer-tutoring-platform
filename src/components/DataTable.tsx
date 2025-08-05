@@ -25,6 +25,7 @@ import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { DataTableViewOptions } from "./DataTableViewOptions"
 import { Download, Plus } from "lucide-react"
+import { CreateClassDialog } from "./CreateClassDialog"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -37,6 +38,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+     const [createClassDialogOpen, setCreateClassDialogOpen] = useState(false);
     
     const table = useReactTable({
         data,
@@ -54,6 +56,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
+            {/* create class icon */}
             <div className="mb-4 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Classrooms</h2>
@@ -64,10 +67,12 @@ export function DataTable<TData, TValue>({
                         <Download/>
                         Import
                     </Button>
-                    <Button size="sm">
+                    <Button size="sm" onClick={() => setCreateClassDialogOpen(true)}>
                         <Plus/>
                         Add New 
                     </Button>
+                    <CreateClassDialog isOpen={createClassDialogOpen} onOpenChange={setCreateClassDialogOpen}/>
+                    
                 </div>
              </div>
             
