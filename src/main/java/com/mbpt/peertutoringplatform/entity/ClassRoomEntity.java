@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClassRoomEntity {
+
+    public ClassRoomEntity(String title, Integer enrolledStudentCount, String classImage) {
+        this.title = title;
+        this.enrolledStudentCount = enrolledStudentCount;
+        this.classImage = classImage;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +41,11 @@ public class ClassRoomEntity {
     @Column(name = "class_image", nullable = false)
     private String classImage;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mentor_id", referencedColumnName = "mentor_id")
     private MentorEntity mentorEntity;
 
-    @OneToMany(mappedBy = "classRoomEntity", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "classRoomEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SessionEntity> sessionEntityList = new ArrayList<>();
 
 }

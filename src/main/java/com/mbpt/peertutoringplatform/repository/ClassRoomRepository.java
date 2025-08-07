@@ -13,9 +13,9 @@ public interface ClassRoomRepository extends JpaRepository<ClassRoomEntity, Inte
 
 
     @Query(value = "SELECT DISTINCT c.* FROM classrooms c " +
-            "JOIN mentors m ON m.id = c.mentor_id " +
+            "JOIN mentors m ON m.mentor_id = c.mentor_id " +
             "WHERE (:mentorName IS NULL OR LOWER(m.first_name) LIKE LOWER(CONCAT('%', :mentorName, '%')) " +
-            "       OR LOWER(m.last_name) LIKE LOWER(CONCAT('%', :mentorName, '%'))) " +
+            "OR LOWER(m.last_name) LIKE LOWER(CONCAT('%', :mentorName, '%'))) " +
             "AND (:title IS NULL OR c.title = :title) " +
             "AND (:minCount IS NULL OR c.enrolled_student_count BETWEEN :minCount AND :maxCount) ",
             nativeQuery = true)

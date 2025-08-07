@@ -51,7 +51,7 @@ public class MentorDTO {
     @Schema(description = "Phone number of the mentor", example = "+15559876543", requiredMode = Schema.RequiredMode.REQUIRED)
     private String phoneNumber;
 
-    @NotBlank(message = "Title must not be blank")
+    @NotNull(message = "Title can't be null")
     @JsonProperty("title")
     @Schema(description = "Title or honorific of the mentor such as Mr., Ms., Dr.", example = "Mr.", requiredMode = Schema.RequiredMode.REQUIRED)
     private Constants.Title title;

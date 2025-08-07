@@ -1,6 +1,7 @@
 package com.mbpt.peertutoringplatform.service;
 
 import com.mbpt.peertutoringplatform.dto.ClassRoomDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,10 +14,11 @@ public interface ClassRoomService {
     /**
      * Create a new classroom records.
      *
-     * @param classRoomDTO the data transfer object containing classroom details
+     * @param title the data transfer object containing classroom details
+     * @param  classImage image of class
      * @return the created {@link ClassRoomDTO } with generated classroom ID
      */
-    ClassRoomDTO createClassRoom(ClassRoomDTO classRoomDTO);
+    ClassRoomDTO createClassRoom(String title, MultipartFile classImage);
 
 
     /**

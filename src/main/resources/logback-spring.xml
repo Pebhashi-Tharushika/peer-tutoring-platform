@@ -27,7 +27,7 @@
     </appender>
 
     <!-- Set custom log level for your package -->
-    <logger name="com.skillmentor.root.service.impl" level="DEBUG"/>
+    <logger name="com.mbpt.peertutoringplatform.service.impl" level="DEBUG"/>
 
     <!-- Root logger -->
     <root level="INFO">

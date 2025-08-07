@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ClassRoomController {
         this.classRoomService = classRoomService;
     }
 
+
     @Operation(summary = "Create a new classroom", description = "Accepts a Classroom JSON and creates a new classroom record")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Classroom created successfully"),
@@ -43,11 +45,16 @@ public class ClassRoomController {
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @PostMapping(value = "/classroom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/classroom", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> createClassRoom(
-            @Parameter(description = "Classroom details to create", required = true)
-            @Valid @RequestBody ClassRoomDTO classRoomDTO) {
-        ClassRoomDTO createdClassRoom = classRoomService.createClassRoom(classRoomDTO);
+            @RequestParam("title") String title,
+            @RequestParam("class_image") MultipartFile classImage
+    ) {
+        System.out.println(title);
+        System.out.println(classImage.getOriginalFilename());
+        System.out.println(classImage);
+        ClassRoomDTO createdClassRoom = classRoomService.createClassRoom(title, classImage);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdClassRoom);
     }
 
@@ -102,7 +109,7 @@ public class ClassRoomController {
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @PutMapping(value = "/classrooms", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/classroom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> updateClassRoom(
             @Parameter(description = "Classroom details to update", required = true)
             @Valid @RequestBody ClassRoomDTO classRoomDTO) {

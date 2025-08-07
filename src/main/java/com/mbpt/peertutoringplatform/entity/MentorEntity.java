@@ -49,7 +49,7 @@ public class MentorEntity {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @NotBlank(message = "Title must not be blank")
+    @NotNull(message = "Title must not be null")
     @Column(name = "title", nullable = false)
     @Enumerated(EnumType.STRING)
     private Constants.Title title;
@@ -84,10 +84,11 @@ public class MentorEntity {
     @Column(name = "positive_reviews", nullable = false)
     private Integer positiveReviews;
 
-    @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
-    private List<SessionEntity> sessionEntityList = new ArrayList<>();
+    @ToString.Exclude
+    @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<ClassRoomEntity> classRoomEntityList = new ArrayList<>();
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.EAGER)
-    private List<ClassRoomEntity> classRoomEntityList = new ArrayList<>();
+    @OneToMany(mappedBy = "mentorEntity", fetch = FetchType.LAZY)
+    private List<SessionEntity> sessionEntityList = new ArrayList<>();
 }

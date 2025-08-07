@@ -57,6 +57,8 @@ public class MentorServiceImpl implements MentorService {
         }
 
         MentorEntity mentorEntity = MentorEntityDTOMapper.map(mentorDTO);
+        mentorEntity.setPositiveReviews(0);
+        mentorEntity.setIsCertified(false);
         MentorEntity savedMentor = mentorRepository.save(mentorEntity);
 
         List<Integer> classRoomIdList = mentorDTO.getClassRoomIdList();

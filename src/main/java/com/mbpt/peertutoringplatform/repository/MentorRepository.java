@@ -22,9 +22,9 @@ public interface MentorRepository extends JpaRepository<MentorEntity, Integer> {
 
 
     @Query(value = "SELECT DISTINCT m.* FROM mentors m " +
-            "LEFT JOIN classrooms c ON m.id = c.mentor_id " +
+            "LEFT JOIN classrooms c ON m.mentor_id = c.mentor_id " +
             "WHERE (:name IS NULL OR LOWER(m.first_name) LIKE LOWER(CONCAT('%', :name, '%')) " +
-            "       OR LOWER(m.last_name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+            "OR LOWER(m.last_name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
             "AND (:profession IS NULL OR m.profession = :profession) " +
             "AND (:classroomTitle IS NULL OR c.title = :classroomTitle) " +
             "AND (:isCertified IS NULL OR m.is_certified = :isCertified)",

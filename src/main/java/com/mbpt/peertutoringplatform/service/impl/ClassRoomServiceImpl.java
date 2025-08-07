@@ -8,10 +8,12 @@ import com.mbpt.peertutoringplatform.mapper.ClassRoomEntityDTOMapper;
 import com.mbpt.peertutoringplatform.mapper.MentorEntityDTOMapper;
 import com.mbpt.peertutoringplatform.repository.ClassRoomRepository;
 import com.mbpt.peertutoringplatform.service.ClassRoomService;
+import com.mbpt.peertutoringplatform.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,30 +26,28 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     private String datasource;
 
     private final ClassRoomRepository classRoomRepository;
+    private final FileService fileService;
 
-    public ClassRoomServiceImpl(ClassRoomRepository classRoomRepository) {
+    public ClassRoomServiceImpl(ClassRoomRepository classRoomRepository, FileService fileService) {
         this.classRoomRepository = classRoomRepository;
+        this.fileService = fileService;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ClassRoomDTO createClassRoom(ClassRoomDTO classRoomDTO) {
+    public ClassRoomDTO createClassRoom(String title, MultipartFile classImage) {
         log.info("Creating new classroom...");
 
-        if (classRoomDTO == null) {
-            log.error("Failed to create classroom: input DTO is null.");
-            throw new IllegalArgumentException("Classroom data must not be null.");
+        if (classImage.isEmpty() || title.isBlank() ) {
+            log.error("Failed to create classroom: input data is invalid.");
+            throw new IllegalArgumentException("Classroom data are required");
         }
+        String imageUrl = fileService.uploadImage(classImage);
 
-        log.debug("ClassRoomDTO received: {}", classRoomDTO);
+        log.debug("image url received: {}", imageUrl);
 
+        ClassRoomEntity classRoomEntity = new ClassRoomEntity(title, 0, imageUrl);
 
-        if (classRoomDTO.getClassRoomId() != null) {
-            log.warn("Attempted to create a classroom that already exists with ID: {}", classRoomDTO.getClassRoomId());
-            throw new IllegalArgumentException("New classroom should not already have an ID.");
-        }
-
-        ClassRoomEntity classRoomEntity = ClassRoomEntityDTOMapper.map(classRoomDTO);
         ClassRoomEntity savedClassroomEntity = classRoomRepository.save(classRoomEntity);
 
         log.info("Created classroom with ID: {} at data-source: {}", savedClassroomEntity.getClassRoomId(), this.datasource);
