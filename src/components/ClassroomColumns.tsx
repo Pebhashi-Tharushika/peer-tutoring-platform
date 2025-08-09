@@ -11,9 +11,9 @@ import { Checkbox } from "./ui/checkbox"
 
 type ColumnActions = {
   editClassroom: (classroom: ClassRoom) => void;
-  deleteClassroom: (id: number) => void;
+  confirmToDeleteClassroom: (id: number) => void;
 };
-export const ClassroomColumns = ({ editClassroom, deleteClassroom }: ColumnActions): ColumnDef<MentorClass>[] => [
+export const ClassroomColumns = ({ editClassroom, confirmToDeleteClassroom }: ColumnActions): ColumnDef<MentorClass>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -89,7 +89,7 @@ export const ClassroomColumns = ({ editClassroom, deleteClassroom }: ColumnActio
             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(cls.title)}>Copy Classroom Title</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => editClassroom(classroomData)}>Edit Classroom</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => deleteClassroom(cls.class_room_id)}>Delete Classroom</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => confirmToDeleteClassroom(cls.class_room_id)}>Delete Classroom</DropdownMenuItem>
             <DropdownMenuItem>View Mentor Details</DropdownMenuItem>
           </DropdownMenuContent>
 
