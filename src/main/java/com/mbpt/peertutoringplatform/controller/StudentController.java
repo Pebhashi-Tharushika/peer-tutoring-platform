@@ -103,44 +103,4 @@ public class StudentController {
         StudentDTO retrievedStudent = studentService.findStudentByClerkId(id);
         return ResponseEntity.status(HttpStatus.OK).body(retrievedStudent);
     }
-
-
-    @Operation(summary = "Update a student", description = "Updates an existing student based on the provided data")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Student updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid student data"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Student not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
-            @ApiResponse(responseCode = "503", description = "Service unavailable")
-    })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @PutMapping(value = "/student", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StudentDTO> updateStudent(
-            @Parameter(description = "Student details to update", required = true)
-            @Valid @RequestBody StudentDTO studentDTO) {
-        StudentDTO updatedStudent = studentService.updateStudentById(studentDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedStudent);
-    }
-
-
-    @Operation(summary = "Delete student by Clerk ID", description = "Deletes a student by their Clerk ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Student deleted successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid student Clerk ID"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Student not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
-            @ApiResponse(responseCode = "503", description = "Service unavailable")
-    })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @DeleteMapping(value = "/student/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StudentDTO> deleteByStudentClerkId(
-            @Parameter(description = "Student Clerk ID of the student to delete", required = true)
-            @NotBlank(message = "Student Clerk ID must not be blank") @PathVariable String id) {
-        StudentDTO deletedStudent = studentService.deleteStudentByClerkId(id);
-        return ResponseEntity.status(HttpStatus.OK).body(deletedStudent);
-    }
 }

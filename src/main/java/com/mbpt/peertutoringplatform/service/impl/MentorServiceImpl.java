@@ -5,8 +5,7 @@ import com.mbpt.peertutoringplatform.dto.MentorDTO;
 import com.mbpt.peertutoringplatform.dto.MentorProfileDTO;
 import com.mbpt.peertutoringplatform.entity.ClassRoomEntity;
 import com.mbpt.peertutoringplatform.entity.MentorEntity;
-import com.mbpt.peertutoringplatform.exception.ClassRoomException;
-import com.mbpt.peertutoringplatform.exception.MentorException;
+import com.mbpt.peertutoringplatform.exception.ResourceNotFoundException;
 import com.mbpt.peertutoringplatform.mapper.MentorEntityDTOMapper;
 import com.mbpt.peertutoringplatform.repository.ClassRoomRepository;
 import com.mbpt.peertutoringplatform.repository.MentorRepository;
@@ -71,7 +70,7 @@ public class MentorServiceImpl implements MentorService {
                 ClassRoomEntity classRoomEntity = classRoomRepository.findById(classRoomId)
                         .orElseThrow(() -> {
                             log.error("Classroom not found with ID: {}", classRoomId);
-                            return new ClassRoomException("Classroom not found with ID: " + classRoomId);
+                            return new ResourceNotFoundException("Classroom not found with ID: " + classRoomId);
                         });
                 classRoomEntity.setMentorEntity(mentorEntity);
                 classRoomRepository.save(classRoomEntity);
@@ -117,69 +116,16 @@ public class MentorServiceImpl implements MentorService {
                 })
                 .orElseThrow(() -> {
                     log.error("Mentor not found with ID: {} from data-source:{}", clerkId, this.datasource);
-                    return new MentorException("Mentor not found with Clerk ID: " + clerkId);
+                    return new ResourceNotFoundException("Mentor not found with Clerk ID: " + clerkId);
                 });
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public MentorDTO updateMentorById(MentorDTO mentorDTO) {
-        log.info("Updating mentor...");
-
-        if (mentorDTO == null || mentorDTO.getMentorId() == null) {
-            log.error("Failed to update mentor: DTO or mentorId is null.");
-            throw new IllegalArgumentException("Mentor ID must not be null for update.");
-        }
-
-        Integer mentorId = mentorDTO.getMentorId();
-
-        log.debug("Updating classroom with ID: {}", mentorId);
-
-
-        MentorEntity mentorEntity = mentorRepository.findById(mentorDTO.getMentorId())
-                .orElseThrow(() -> {
-                    log.error("Failed to update mentor: Mentor not found with ID: {}", mentorId);
-                    return new MentorException("Mentor not found with ID: " + mentorId);
-                });
-        mentorEntity.setFirstName(mentorDTO.getFirstName());
-        mentorEntity.setLastName(mentorDTO.getLastName());
-        mentorEntity.setEmail(mentorDTO.getEmail());
-        mentorEntity.setAddress(mentorDTO.getAddress());
-        mentorEntity.setPhoneNumber(mentorEntity.getPhoneNumber());
-        mentorEntity.setTitle(mentorDTO.getTitle());
-        mentorEntity.setSessionFee(mentorDTO.getSessionFee());
-        mentorEntity.setProfession(mentorDTO.getProfession());
-        mentorEntity.setSubject(mentorDTO.getSubject());
-        mentorEntity.setQualification(mentorDTO.getQualification());
-        mentorEntity.setClerkMentorId(mentorDTO.getClerkMentorId());
-        mentorEntity.setMentorImage(mentorDTO.getMentorImage());
-        mentorEntity.setIsCertified(mentorDTO.getIsCertified());
-
-        MentorEntity updatedEntity = mentorRepository.save(mentorEntity);
-        log.info("Updated mentor with ID: {}", mentorId);
-        return MentorEntityDTOMapper.map(updatedEntity);
-    }
-
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public MentorDTO deleteMentorByClerkId(String clerkId) {
-        log.info("Deleting classroom...");
-        MentorEntity mentorEntity = mentorRepository.findByClerkMentorId(clerkId)
-                .orElseThrow(() -> {
-                    log.error("Failed to delete mentor. Mentor not found with ID: {}", clerkId);
-                    return new MentorException("Failed to delete mentor. Mentor not found with Clerk ID: " + clerkId);
-                });
-        mentorRepository.delete(mentorEntity);
-        log.info("Deleted mentor with Clerk ID: {} ", clerkId);
-        return MentorEntityDTOMapper.map(mentorEntity);
-    }
 
     @Override
     public MentorProfileDTO getMentorProfile(Integer id) {
         MentorEntity mentor = mentorRepository.findById(id).orElseThrow(() -> {
             log.error("Mentor not found with ID: {}", id);
-            return new MentorException("Failed load mentor's profile. Mentor not found with ID: " + id);
+            return new ResourceNotFoundException("Failed load mentor's profile. Mentor not found with ID: " + id);
         });
         MentorDTO mentorDTO = MentorEntityDTOMapper.map(mentor);
         mentorDTO.setClassRoomIdList(mentor.getClassRoomEntityList().stream().map(ClassRoomEntity::getClassRoomId).collect(Collectors.toList()));

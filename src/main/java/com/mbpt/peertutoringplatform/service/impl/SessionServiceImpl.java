@@ -1,14 +1,11 @@
 package com.mbpt.peertutoringplatform.service.impl;
 
 import com.mbpt.peertutoringplatform.common.Constants;
-import com.mbpt.peertutoringplatform.dto.AuditDTO;
-import com.mbpt.peertutoringplatform.dto.PaymentDTO;
 import com.mbpt.peertutoringplatform.dto.SessionDTO;
 import com.mbpt.peertutoringplatform.dto.SessionLiteDTO;
 import com.mbpt.peertutoringplatform.entity.LiteSessionEntity;
 import com.mbpt.peertutoringplatform.entity.SessionEntity;
-import com.mbpt.peertutoringplatform.exception.SessionException;
-import com.mbpt.peertutoringplatform.mapper.AuditEntityDTOMapper;
+import com.mbpt.peertutoringplatform.exception.ResourceNotFoundException;
 import com.mbpt.peertutoringplatform.mapper.LiteSessionEntityDTOMapper;
 import com.mbpt.peertutoringplatform.mapper.SessionEntityDTOMapper;
 import com.mbpt.peertutoringplatform.repository.LiteSessionRepository;
@@ -19,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -56,21 +52,6 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     @Transactional(readOnly = true)
-    public SessionDTO getSessionById(Integer sessionId) {
-        log.info("Fetching session by ID...");
-        return sessionRepository.findById(sessionId)
-                .map(session -> {
-                    log.info("Session found: {}", session);
-                    return SessionEntityDTOMapper.map(session);
-                })
-                .orElseThrow(() -> {
-                    log.error("Session not found with ID: {} from data-source:{}", sessionId, this.datasource);
-                    return new SessionException("Session not found with ID: " + sessionId);
-                });
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<SessionDTO> getAllSessions() {
         log.info("Fetching all sessions...");
         List<SessionEntity> sessionEntities = sessionRepository.findAll();
@@ -104,7 +85,7 @@ public class SessionServiceImpl implements SessionService {
 
         SessionEntity sessionEntity = sessionRepository.findById(sessionId).orElseThrow(() -> {
             log.error("Failed to update session status: session not found with ID: {}", sessionId);
-            return new SessionException("session not found with ID: " + sessionId);
+            return new ResourceNotFoundException("session not found with ID: " + sessionId);
         });
 
         sessionEntity.setSessionStatus(sessionStatus);
@@ -114,28 +95,4 @@ public class SessionServiceImpl implements SessionService {
         return SessionEntityDTOMapper.map(updatedEntity);
     }
 
-
-    @Override
-    public List<AuditDTO> getAllAudits() {
-        final List<SessionEntity> sessionEntityList = sessionRepository.findAll();
-        return sessionEntityList.stream().map(AuditEntityDTOMapper::map).toList();
-    }
-
-    @Override
-    public List<PaymentDTO> findMentorPayments(String startDate, String endDate) {
-        if (startDate == null || endDate == null) {
-            throw new IllegalArgumentException("Start date and end date must not be null.");
-        }
-        List<Object> rawResults = sessionRepository.findMentorPayments(startDate, endDate);
-        if (rawResults == null || rawResults.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return rawResults.stream().map(obj -> {
-            Object[] row = (Object[]) obj;
-            Integer mentorId = (Integer) row[0];
-            String mentorName = (String) row[1];
-            Double totalFee = (Double) row[2];
-            return new PaymentDTO(mentorId, mentorName, totalFee);
-        }).toList();
-    }
 }

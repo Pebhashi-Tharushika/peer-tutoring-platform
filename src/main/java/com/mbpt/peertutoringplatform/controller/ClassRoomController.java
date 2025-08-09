@@ -47,14 +47,12 @@ public class ClassRoomController {
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @PostMapping(value = "/classroom", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> createClassRoom(
+            @Parameter(description = "title of the classroom")
             @RequestParam("title") String title,
+            @Parameter(description = "image of the classroom")
             @RequestParam("class_image") MultipartFile classImage
     ) {
-        System.out.println(title);
-        System.out.println(classImage.getOriginalFilename());
-        System.out.println(classImage);
         ClassRoomDTO createdClassRoom = classRoomService.createClassRoom(title, classImage);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(createdClassRoom);
     }
 
@@ -89,7 +87,7 @@ public class ClassRoomController {
     @PreAuthorize(Constants.STUDENT_ROLE_PERMISSION)
     @GetMapping(value = "/classroom/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> getClassRoomById(
-            @Parameter(description = "ID of the classroom to retrieve", required = true)
+            @Parameter(description = "ID of the classroom to retrieve")
             @Min(value = 1, message = "Classroom ID must be positive value")
             @PathVariable @NotNull(message = "classroom ID must not be null") Integer id
     ) {
@@ -109,11 +107,19 @@ public class ClassRoomController {
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @PutMapping(value = "/classroom", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/classroom/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> updateClassRoom(
-            @Parameter(description = "Classroom details to update", required = true)
-            @Valid @RequestBody ClassRoomDTO classRoomDTO) {
-        ClassRoomDTO updatedClassRoom = classRoomService.updateClassRoomById(classRoomDTO);
+            @Parameter(description = "ID of the classroom to update")
+            @Min(value = 1, message = "Classroom ID must be positive value")
+            @PathVariable @NotNull(message = "classroom ID must not be null") Integer id,
+            @Parameter(description = "new title of the classroom")
+            @RequestParam("title") @NotNull(message = "classroom ID must not be null") String title,
+            @Parameter(description = "new image of the classroom")
+            @RequestParam(value = "class_image", required = false) MultipartFile classImage,
+            @Parameter(description = "existing url of the classroom image")
+            @RequestParam(value = "existing_image_url", required = false) String existingImageUrl
+    ) {
+        ClassRoomDTO updatedClassRoom = classRoomService.updateClassRoomById(id, title, classImage, existingImageUrl);
         return ResponseEntity.status(HttpStatus.OK).body(updatedClassRoom);
     }
 
@@ -131,9 +137,9 @@ public class ClassRoomController {
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
     @DeleteMapping(value = "/classroom/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> deleteClassRoom(
-            @Parameter(description = "ID of the classroom to delete", required = true)
-            @Min(value = 1, message = "Classroom ID must be positive")
-            @PathVariable Integer id) {
+            @Parameter(description = "ID of the classroom to delete")
+            @Min(value = 1, message = "Classroom ID must be positive value")
+            @PathVariable @NotNull(message = "classroom ID must not be null") Integer id) {
         ClassRoomDTO deletedClassRoom = classRoomService.deleteClassRoomById(id);
         return ResponseEntity.status(HttpStatus.OK).body(deletedClassRoom);
     }

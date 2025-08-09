@@ -19,12 +19,35 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            String fieldName = fieldError.getField();
+            String errorMessage = fieldError.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
         }
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", Instant.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("errors", errors);
+        body.put("error", "Validation Failed");
+        body.put("details", errors);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Resource Not Found");
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Invalid Argument");
+        body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
@@ -36,16 +59,6 @@ public class GlobalExceptionHandler {
         body.put("error", "Validation failed");
         body.put("details", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(StudentException.class)
-    public ResponseEntity<Map<String, Object>> handleStudentException(StudentException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now());
-        body.put("status", HttpStatus.NOT_FOUND.value());
-        body.put("error", "Student error");
-        body.put("message", ex.getMessage());
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

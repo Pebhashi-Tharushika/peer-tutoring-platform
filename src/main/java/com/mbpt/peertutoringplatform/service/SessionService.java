@@ -1,8 +1,6 @@
 package com.mbpt.peertutoringplatform.service;
 
 import com.mbpt.peertutoringplatform.common.Constants;
-import com.mbpt.peertutoringplatform.dto.AuditDTO;
-import com.mbpt.peertutoringplatform.dto.PaymentDTO;
 import com.mbpt.peertutoringplatform.dto.SessionDTO;
 import com.mbpt.peertutoringplatform.dto.SessionLiteDTO;
 
@@ -22,15 +20,6 @@ public interface SessionService {
      * @return the created {@link SessionDTO } with its generated ID and saved values
      */
     SessionLiteDTO createSession(SessionLiteDTO sessionDTO);
-
-
-    /**
-     * Retrieves a session by its ID.
-     *
-     * @param sessionId the ID of the session to retrieve
-     * @return a SessionDTO object representing the session
-     */
-    SessionDTO getSessionById(Integer sessionId);
 
 
     /**
@@ -58,25 +47,4 @@ public interface SessionService {
      */
     SessionDTO updateSessionStatus(Integer sessionId, Constants.SessionStatus sessionStatus);
 
-
-    /**
-     * Retrieves all session audit records.
-     * This typically includes detailed info about each session for reporting or auditing.
-     *
-     * @return a list of {@link AuditDTO} instances representing the session audit DTOs
-     */
-    List<AuditDTO> getAllAudits();
-
-
-    /**
-     * Retrieves a list of mentor's total payments within a given date range.
-     * This method fetches and calculates the total payment details for all sessions
-     * conducted between the given start and end dates (inclusive). It is typically
-     * used for generating mentor payment summaries.
-     *
-     * @param startDate the start date of the time period (inclusive), in ISO format (e.g., "2025-01-01")
-     * @param endDate   the end date of the time period (inclusive), in ISO format (e.g., "2025-01-31")
-     * @return a list of {@link PaymentDTO} instances representing the payments made to mentors
-     */
-    List<PaymentDTO> findMentorPayments(String startDate, String endDate);
 }

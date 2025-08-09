@@ -23,7 +23,7 @@ public class ClassRoomDTO {
     @Schema(description = "The official name of the classroom, indicating the core subject matters or skills covered.", example = "CISSP Exam Prep", requiredMode = Schema.RequiredMode.REQUIRED)
     private String title;
 
-    @NotNull(message = "Enrolled student count must not be null")
+//    @NotNull(message = "Enrolled student count must not be null")
     @JsonProperty("enrolled_student_count")
     @Schema(description = "Total number of students enrolled in the classroom", example = "30", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer enrolledStudentCount;

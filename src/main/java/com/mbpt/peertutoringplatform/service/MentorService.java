@@ -43,22 +43,5 @@ public interface MentorService {
     MentorDTO findMentorByClerkId(String clerkId);
 
 
-    /**
-     * Updates an existing mentor's details.
-     *
-     * @param mentorDTO the data transfer object containing updated mentor details
-     * @return a {@link MentorDTO } object representing the updated mentor
-     */
-    MentorDTO updateMentorById(MentorDTO mentorDTO);
-
-
-    /**
-     * Delete a mentor by their Clerk ID.
-     *
-     * @param clerkId the ID generated for the mentor by clerk, to delete
-     * @return a {@link MentorDTO } object representing the deleted mentor
-     */
-    MentorDTO deleteMentorByClerkId(String clerkId);
-
     MentorProfileDTO getMentorProfile(Integer id);
 }

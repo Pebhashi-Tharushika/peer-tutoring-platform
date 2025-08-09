@@ -88,45 +88,6 @@ public class MentorController {
     }
 
 
-    @Operation(summary = "Update a mentor", description = "Updates an existing mentor's details")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mentor updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid mentor data"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Mentor not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
-            @ApiResponse(responseCode = "503", description = "Service unavailable")
-    })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @PutMapping(value = "/mentors", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateMentor(
-            @Parameter(description = "Mentor details to update", required = true)
-            @Valid @RequestBody MentorDTO mentorDTO) {
-        final MentorDTO mentor = mentorService.updateMentorById(mentorDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(mentor);
-    }
-
-
-    @Operation(summary = "Delete mentor by Clerk ID", description = "Deletes a mentor and its associated data")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mentor deleted successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid mentor Clerk ID"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Mentor not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
-            @ApiResponse(responseCode = "503", description = "Service unavailable")
-    })
-    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @DeleteMapping(value = "/mentors/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteMentorByClerkId(
-            @Parameter(description = "Clerk ID of the mentor to delete", required = true)
-            @NotBlank(message = "Mentor Clerk ID must not be blank") @PathVariable String id) {
-        final MentorDTO mentor = mentorService.deleteMentorByClerkId(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mentor);
-    }
-
 
     @Operation(summary = "Retrieve mentor profile by mentor ID", description = "Retrieve mentor profile details and its associated data")
     @ApiResponses(value = {

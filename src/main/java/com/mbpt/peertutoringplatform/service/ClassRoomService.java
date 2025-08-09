@@ -32,10 +32,13 @@ public interface ClassRoomService {
     /**
      * Updates an existing classroom's details.
      *
-     * @param classRoomDTO the data transfer object containing updated classroom details
+     * @param id the ID of the classroom to delete
+     * @param title the new title of the classroom
+     * @param classImage the new classroom image
+     * @param imageUrl the url of the new classroom image
      * @return the {@link ClassRoomDTO}  object representing the updated classroom
      */
-    ClassRoomDTO updateClassRoomById(ClassRoomDTO classRoomDTO);
+    ClassRoomDTO updateClassRoomById(Integer id, String title, MultipartFile classImage, String imageUrl);
 
 
     /**
@@ -54,16 +57,4 @@ public interface ClassRoomService {
      * @return a {@link ClassRoomDTO} object matching the provided ID
      */
     ClassRoomDTO findClassRoomById(Integer id);
-
-    /**
-     * Retrieves a list of classrooms based on a set of optional filters.
-     * If all parameters are null, all classrooms will be returned.
-     *
-     * @param title      the official name of the classroom (optional)
-     * @param mentorName the name of the mentor who conducts the classroom's session (optional, supports partial match)
-     * @param minCount   the minimum number of students enrolled for the classroom (optional, used as part of a range)
-     * @param maxCount   the maximum number of students enrolled for the classroom (optional, used as part of a range)
-     * @return a list of {@link ClassRoomDTO} objects that match the provided filter criteria
-     */
-    List<ClassRoomDTO> findClassRoomsByFilters(String title, String mentorName, Integer minCount, Integer maxCount);
 }

@@ -2,7 +2,7 @@ package com.mbpt.peertutoringplatform.service.impl;
 
 import com.mbpt.peertutoringplatform.dto.StudentDTO;
 import com.mbpt.peertutoringplatform.entity.StudentEntity;
-import com.mbpt.peertutoringplatform.exception.StudentException;
+import com.mbpt.peertutoringplatform.exception.ResourceNotFoundException;
 import com.mbpt.peertutoringplatform.mapper.StudentEntityDTOMapper;
 import com.mbpt.peertutoringplatform.repository.StudentRepository;
 import com.mbpt.peertutoringplatform.service.StudentService;
@@ -58,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
             // Retry finding the student in case it was created concurrently
             return studentRepository.findByClerkStudentId(studentDTO.getClerkStudentId())
                     .map(StudentEntityDTOMapper::map)
-                    .orElseThrow(() -> new StudentException("Failed to create student due to data integrity violation"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Failed to create student due to data integrity violation"));
         }
 
     }
@@ -89,48 +89,8 @@ public class StudentServiceImpl implements StudentService {
                 })
                 .orElseThrow(() -> {
                     log.error("Student not found with Clerk ID: {} from data-source:{}", clerkId, this.datasource);
-                    return new StudentException("Student not found with Clerk ID: " + clerkId);
+                    return new ResourceNotFoundException("Student not found with Clerk ID: " + clerkId);
                 });
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public StudentDTO updateStudentById(final StudentDTO studentDTO) {
-        log.info("Updating student...");
-        if (studentDTO == null || studentDTO.getStudentId() == null) {
-            log.error("Failed to update student: DTO or student's ID is null.");
-            throw new IllegalArgumentException("Student ID must not be null for update.");
-        }
-        log.debug("Updating student with ID: {}", studentDTO.getStudentId());
-        StudentEntity selectedStudentEntity = studentRepository.findById(studentDTO.getStudentId())
-                .orElseThrow(() -> {
-                    log.error("Failed to update student: Student not found with ID: {}", studentDTO.getStudentId());
-                    return new StudentException("Student not found with ID: " + studentDTO.getStudentId());
-                });
-        selectedStudentEntity.setFirstName(studentDTO.getFirstName());
-        selectedStudentEntity.setLastName(studentDTO.getLastName());
-        selectedStudentEntity.setEmail(studentDTO.getEmail());
-        selectedStudentEntity.setAddress(studentDTO.getAddress());
-        selectedStudentEntity.setPhoneNumber(studentDTO.getPhoneNumber());
-        selectedStudentEntity.setAge(studentDTO.getAge());
-
-        StudentEntity updated = studentRepository.save(selectedStudentEntity);
-        log.info("Updated student with ID: {}", updated.getStudentId());
-        return StudentEntityDTOMapper.map(updated);
-    }
-
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public StudentDTO deleteStudentByClerkId(String clerkId) {
-        log.info("Deleting student with Clerk ID: {} ...", clerkId);
-        StudentEntity studentEntity = studentRepository.findByClerkStudentId(clerkId)
-                .orElseThrow(() -> {
-                    log.error("Failed to delete student. Student not found with Clerk ID: {}", clerkId);
-                    return new StudentException("Failed to delete student. Student not found with Clerk ID: " + clerkId);
-                });
-        studentRepository.delete(studentEntity);
-        log.info("Deleted student with Clerk ID: {} ", clerkId);
-        return StudentEntityDTOMapper.map(studentEntity);
-    }
 }
