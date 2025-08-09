@@ -29,28 +29,37 @@ export interface User {
   enrolledCourses: Course[];
 }
 
+export interface ClassRoom {
+  class_room_id: number;
+  title: string;
+  enrolled_student_count: number;
+  class_image: string | File | undefined;
+}
+
+export interface Mentor {
+  mentor_id: number;
+  clerk_mentor_id: string;
+  first_name: string;
+  last_name: string;
+  address: string;
+  email: string;
+  title: string;
+  session_fee: number;
+  profession: string;
+  subject: string;
+  phone_number: string;
+  qualification: string;
+  mentor_image: string;
+  is_certified: boolean;
+  positive_reviews: number;
+}
+
 export interface MentorClass {
   class_room_id: number;
   title: string;
   enrolled_student_count: number;
   class_image: string;
-  mentor: {
-    mentor_id: number;
-    clerk_mentor_id: string;
-    first_name: string;
-    last_name: string;
-    address: string;
-    email: string;
-    title: string;
-    session_fee: number;
-    profession: string;
-    subject: string;
-    phone_number: string;
-    qualification: string;
-    mentor_image: string;
-    is_certified: boolean;
-    positive_reviews: number;
-  };
+  mentor: Mentor;
 }
 
 export interface Student {
@@ -73,44 +82,19 @@ export interface Session {
   topic: string;
 }
 
-export interface ClassRoom {
-  class_room_id: number;
-  title: string;
-  enrolled_student_count: number;
-  class_image: string;
-}
-
-export interface Mentor {
-  mentor_id: number;
-  clerk_mentor_id: string;
-  first_name: string;
-  last_name: string;
-  address: string;
-  email: string;
-  title: string;
-  session_fee: number;
-  profession: string;
-  subject: string;
-  phone_number: string;
-  qualification: string;
-  mentor_image: string;
-  is_certified: boolean;
-  positive_reviews: number;
-}
-
 export enum SessionStatus {
   PENDING = "PENDING",
   ACCEPTED = "ACCEPTED",
   COMPLETED = "COMPLETED",
 }
 
-export interface FullSession {
-  session_id: number;
-  student: Student;
-  class_room: ClassRoom;
-  mentor: Mentor;
-  topic: string;
-  start_time: string;
-  end_time: string;
-  session_status: SessionStatus;
-}
+// export interface FullSession {
+//   session_id: number;
+//   student: Student;
+//   class_room: ClassRoom;
+//   mentor: Mentor;
+//   topic: string;
+//   start_time: string;
+//   end_time: string;
+//   session_status: SessionStatus;
+// }

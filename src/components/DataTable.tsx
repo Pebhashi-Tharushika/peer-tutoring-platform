@@ -22,24 +22,23 @@ import {
 import { DataTablePagination } from "./DataTablePagination"
 import { useState } from "react"
 import { Input } from "./ui/input"
-import { Button } from "./ui/button"
 import { DataTableViewOptions } from "./DataTableViewOptions"
-import { Download, Plus } from "lucide-react"
-import { CreateClassDialog } from "./CreateClassDialog"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    filterKey: string
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    filterKey,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-     const [createClassDialogOpen, setCreateClassDialogOpen] = useState(false);
-    
+   
+
     const table = useReactTable({
         data,
         columns,
@@ -49,72 +48,43 @@ export function DataTable<TData, TValue>({
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         state: {
-        sorting,
-        columnFilters
+            sorting,
+            columnFilters
         },
     })
 
     return (
-        <div>
-            {/* create class icon */}
-            <div className="mb-4 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Classrooms</h2>
-                    <p className="text-muted-foreground">Here's a list of all classes in the platform!</p>
-                </div>
-                <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
-                        <Download/>
-                        Import
-                    </Button>
-                    <Button size="sm" onClick={() => setCreateClassDialogOpen(true)}>
-                        <Plus/>
-                        Add New 
-                    </Button>
-                    <CreateClassDialog isOpen={createClassDialogOpen} onOpenChange={setCreateClassDialogOpen}/>
-                    
-                </div>
-             </div>
-            
-            
-        
-            <div className="space-y-4">
-                
+        <div className="space-y-4">
+
                 {/* Search, Filter and column toggle */}
                 <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                        <Input
-                        placeholder="Filter class titles..."
-                        value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+                    <Input
+                        placeholder={`Filter by ${filterKey}...`}
+                        value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
                         onChange={(event) =>
-                            table.getColumn("title")?.setFilterValue(event.target.value)
+                            table.getColumn(filterKey)?.setFilterValue(event.target.value)
                         }
                         className="max-w-sm"
-                        />
-                    </div>
-                    <div>
-                        <DataTableViewOptions table={table} />
-                    </div>
+                    />
+                    
+                    <DataTableViewOptions table={table} />
+                    
                 </div>
 
                 {/* Table */}
                 <div className="overflow-auto rounded-md border">
                     <Table className="min-w-full">
-                        <TableHeader>
-                            {table.getHeaderGroups().map((headerGroup) => (
+                        <TableHeader> 
+                            {table.getHeaderGroups().map((headerGroup) => (    
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map((header) => {
                                         return (
                                             <TableHead key={header.id}>
                                                 {header.isPlaceholder
                                                     ? null
-                                                    : flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext()
-                                                    )}
+                                                    : flexRender(header.column.columnDef.header, header.getContext())}
                                             </TableHead>
-                                        )
-                                    })}
+                                        )})}
                                 </TableRow>
                             ))}
                         </TableHeader>
@@ -146,6 +116,6 @@ export function DataTable<TData, TValue>({
                 {/* Pagination */}
                 <DataTablePagination table={table} />
             </div>
-        </div>
+        
     )
 }

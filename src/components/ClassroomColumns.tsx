@@ -1,6 +1,6 @@
 "use client"
 
-import { MentorClass } from "@/lib/types"
+import { ClassRoom, MentorClass } from "@/lib/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { PreviewDialog } from "./PreviewDialog"
 import { Button } from "./ui/button"
@@ -9,7 +9,11 @@ import { MoreHorizontal } from "lucide-react"
 import { SortableColumn } from "./SortableColumn"
 import { Checkbox } from "./ui/checkbox"
 
-export const columns: ColumnDef<MentorClass>[] = [
+type ColumnActions = {
+  editClassroom: (classroom: ClassRoom) => void;
+  deleteClassroom: (id: number) => void;
+};
+export const ClassroomColumns = ({ editClassroom, deleteClassroom }: ColumnActions): ColumnDef<MentorClass>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -44,7 +48,7 @@ export const columns: ColumnDef<MentorClass>[] = [
     header: ({ column }) => <SortableColumn column={column} title="Enrolled Students" />,
   },
   {
-    accessorFn: row => `${row.mentor.first_name} ${row.mentor.last_name}`,
+    accessorFn: row => row.mentor !== null ? `${row.mentor.first_name} ${row.mentor.last_name}` : "Unassigned",
     id: "mentor_name",
     header: ({ column }) => <SortableColumn column={column} title="Mentor Name" />,
   },
@@ -53,14 +57,24 @@ export const columns: ColumnDef<MentorClass>[] = [
     header: "Class Image",
     cell: ({ row }) => {
       const imageUrl = row.original.class_image
-      return <PreviewDialog imageUrl={imageUrl} />
+      if (typeof imageUrl === "string") {
+        return <PreviewDialog imageUrl={imageUrl} />
+      }
+      return <span className="text-muted-foreground">No image</span>
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
       const cls = row.original
- 
+
+      const classroomData: ClassRoom = {
+        class_room_id: cls.class_room_id,
+        title: cls.title,
+        enrolled_student_count: cls.enrolled_student_count,
+        class_image: cls.class_image,
+      };
+
       return (
         <DropdownMenu>
 
@@ -72,23 +86,13 @@ export const columns: ColumnDef<MentorClass>[] = [
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(cls.title)}
-            >
-              Copy Classroom Title
-            </DropdownMenuItem>
-
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(cls.title)}>Copy Classroom Title</DropdownMenuItem>
             <DropdownMenuSeparator />
-           
-            <DropdownMenuItem
-              onClick={() => console.log(`Editing classroom with ID: ${cls.class_room_id}`)}
-              >
-                Edit Classroom
-            </DropdownMenuItem>
-            <DropdownMenuItem>Delete Classroom</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => editClassroom(classroomData)}>Edit Classroom</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => deleteClassroom(cls.class_room_id)}>Delete Classroom</DropdownMenuItem>
             <DropdownMenuItem>View Mentor Details</DropdownMenuItem>
           </DropdownMenuContent>
-          
+
         </DropdownMenu>
       )
     },
