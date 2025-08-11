@@ -52,6 +52,7 @@ export interface Mentor {
   mentor_image: string;
   is_certified: boolean;
   positive_reviews: number;
+  classroom_id_list: number[];
 }
 
 export interface MentorClass {
@@ -86,6 +87,15 @@ export enum SessionStatus {
   PENDING = "PENDING",
   ACCEPTED = "ACCEPTED",
   COMPLETED = "COMPLETED",
+}
+
+export enum TitleEnum {
+  MR = "Mr.",
+  MRS = "Mrs.",
+  MISS = "Miss.",
+  MS = "Ms.",
+  DR = "Dr.",
+  PROF = "Prof.",
 }
 
 // export interface FullSession {

@@ -41,7 +41,7 @@ const editSchema = baseSchema.extend({
       z.custom<File>((file) => file instanceof File && file.size > 0, {
         message: "Image is required",
       }),
-      z.string().url(),
+      z.url(),
     ])
     .optional(),
 });

@@ -59,7 +59,7 @@ export function DataTable<TData, TValue>({
                 {/* Search, Filter and column toggle */}
                 <div className="flex justify-between items-center">
                     <Input
-                        placeholder={`Filter by ${filterKey}...`}
+                        placeholder={`Filter by ${filterKey.replace('_',' ')}...`}
                         value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
                         onChange={(event) =>
                             table.getColumn(filterKey)?.setFilterValue(event.target.value)
