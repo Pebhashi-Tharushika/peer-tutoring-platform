@@ -52,7 +52,7 @@ export interface Mentor {
   mentor_image: string;
   is_certified: boolean;
   positive_reviews: number;
-  classroom_id_list: number[];
+  classrooms: number[];
 }
 
 export interface MentorClass {

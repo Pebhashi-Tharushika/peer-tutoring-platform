@@ -1,5 +1,3 @@
-
-
 import { DataTable } from "@/components/DataTable";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -9,7 +7,6 @@ import { Mentor } from "@/lib/types";
 import { useAuth } from "@clerk/clerk-react";
 import { Download, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import AlertConfirmationDialog from "@/components/AlertConfirmationDialog";
 import { MentorColumns } from "@/components/MentorColumns";
 import { MentorDialog } from "@/components/MentorDialog";
@@ -31,37 +28,17 @@ export default function MentorPage() {
   }
 
   async function deleteMentor() {
-    
-    if (mentorIdToDelete === null) return;
-
-    try {
-      const token = await getToken({ template: "skillmentor-auth-frontend" });
-      const response = await fetch(`${BACKEND_URL}/academic/mentor/${mentorIdToDelete}`, { // delete a mentor
-        method: 'DELETE',
-        headers: ({
-          Authorization: `Bearer ${token}`,
-        })
-      });
-
-      if (!response.ok) throw new Error('Failed to delete mentor');
-
-      setMentors(mentors.filter(c => c.mentor_id !== mentorIdToDelete));
-      toast.success("Mentor deleted successfully");
-
-    } catch (error) {
-      console.error("Delete failed", error);
-      toast.error("Failed to delete mentor.")
-    } finally {
-      setIsAlertDialogOpen(false);
-      setMentorIdToDelete(null);
-    }
+    //Todo: Implement delete mentor functionality
+    console.log("deleted Mentor with mentorId:", mentorIdToDelete);
+    setIsAlertDialogOpen(false);
+    setMentorIdToDelete(null);
   }
 
   async function fetchAllMentors() {
 
     try {
       const token = await getToken({ template: "skillmentor-auth-frontend" });
-      const response = await fetch(`${BACKEND_URL}/academic/mentor`,{
+      const response = await fetch(`${BACKEND_URL}/academic/mentor`, {
         headers: {
           Authorization: `Bearer ${token}`,
         }

@@ -1,4 +1,3 @@
-
 import { ClassroomColumns } from "@/components/ClassroomColumns";
 import { ClassroomDialog } from "@/components/ClassroomDialog";
 import { DataTable } from "@/components/DataTable";
@@ -109,7 +108,7 @@ export default function ClassroomPage() {
                   Add New
                 </Button>
 
-                {/* Dialog for Creating */}
+                {/* Dialog for Creating/updating */}
                 <ClassroomDialog
                   isOpen={isClassroomDialogOpen}
                   onOpenChange={setIsClassroomDialogOpen}

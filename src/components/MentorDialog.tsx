@@ -20,31 +20,31 @@ import { useAuth } from "@clerk/clerk-react"
 import { BACKEND_URL } from "@/config/env"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog"
 import { Mentor, MentorClass, TitleEnum } from "@/lib/types"
-import { useEffect, useState } from "react"
-import { MultiSelect } from "./MultiSelect"
+import { useEffect, useRef, useState } from "react"
+import { MultiSelect, MultiSelectRef } from "./MultiSelect"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { ScrollArea } from "./ui/scroll-area"
 
 
 const baseSchema = z.object({
-  title: z.enum(TitleEnum, { error: "Title is required.", }),
-  firstName: z.string().min(2, { message: "First name is required." }),
-  lastName: z.string().min(2, { message: "Last name is required." }),
-  email: z.email({ message: "Invalid email address." }),
-  phoneNumber: z.string().regex(/^\+[1-9]\d{6,14}$/, { message: "Invalid phone number." }),
-  address: z.string().min(5, { message: "Address is required." }),
-  profession: z.string().min(2, { message: "Profession is required." }),
-  qualification: z.string().min(2, { message: "Qualification is required." }),
-  sessionFee: z.coerce.number().min(0, { message: "Session fee must be a positive number." }), // Use z.coerce to convert string to number
-  subject: z.string().min(10, { message: "Subject must be at least 10 characters." }).max(15, { message: "Subject must not be longer than 750 characters." }),
-  classes: z.array(z.string()).nonempty({ message: "At least one class is required." }),
+  title: z.enum(TitleEnum, { error: "required*" }),
+  firstName: z.string().min(2, { message: "required*" }),
+  lastName: z.string().min(2, { message: "required*" }),
+  email: z.email({ message: "Invalid" }),
+  phoneNumber: z.string().regex(/^\+[1-9]\d{6,14}$/, { message: "Invalid" }),
+  address: z.string().min(5, { message: "required*" }),
+  profession: z.string().min(2, { message: "required*" }),
+  qualification: z.string().min(2, { message: "required*" }),
+  sessionFee: z.coerce.number().min(1, { message: "Invalid" }), // Use z.coerce to convert string to number
+  subject: z.string().min(10, { message: "must be at least 10 characters" }).max(750, { message: "Subject must not be longer than 750 characters." }),
+  classes: z.array(z.string()).nonempty({ message: "at least one class is required*" }),
 });
 
 const createSchema = baseSchema.extend({
   mentorImage: z.custom<File>((file) => file instanceof File && file.size > 0, {
-    message: "Image is required",
+    message: "required*",
   })
-    .refine((file) => file.size > 0, "Image is required."),
+    .refine((file) => file.size > 0, "required*"),
 });
 
 const editSchema = baseSchema.extend({
@@ -79,7 +79,7 @@ export function MentorDialog({
   const form = useForm<UnifiedFormValues>({
     resolver: zodResolver(mode === "create" ? createSchema : editSchema) as Resolver<UnifiedFormValues>,
     defaultValues: {
-      title: initialData?.title as TitleEnum ?? undefined,
+      title: initialData?.title as TitleEnum ?? "",
       firstName: initialData?.first_name ?? "",
       lastName: initialData?.last_name ?? "",
       email: initialData?.email ?? "",
@@ -89,15 +89,18 @@ export function MentorDialog({
       qualification: initialData?.qualification ?? "",
       sessionFee: initialData?.session_fee ?? 0,
       subject: initialData?.subject ?? "",
-      classes: initialData?.classroom_id_list?.map(String) ?? [],
+      classes: initialData?.classrooms?.map(String) ?? [],
     },
   });
+
+  const multiSelectRef = useRef<MultiSelectRef>(null);
 
   useEffect(() => {
     fetchClassesNotAssignedMentor();
     if (isOpen && initialData) {
+
       form.reset({
-        title: initialData.title as TitleEnum,
+        title: TitleEnum[initialData.title as keyof typeof TitleEnum],
         firstName: initialData.first_name,
         lastName: initialData.last_name,
         email: initialData.email,
@@ -107,9 +110,32 @@ export function MentorDialog({
         qualification: initialData.qualification,
         sessionFee: initialData.session_fee,
         subject: initialData.subject,
-        classes: initialData.classroom_id_list.map(String),
         mentorImage: initialData.mentor_image,
       });
+
+      // set classes to multi-select from the initial data during update
+      const existingClassIds = new Set(classes.map(cls => cls.class_room_id));
+
+      const promisesToFetch = initialData.classrooms.filter(id => !existingClassIds.has(id))
+        .map(id => fetchClassroomById(id));
+
+      Promise.all(promisesToFetch)
+        .then(fetchedClassrooms => {
+          const validFetchedClasses = fetchedClassrooms.filter(Boolean);
+          const finalClasses = [...classes, ...validFetchedClasses];
+          setClasses(finalClasses);
+
+          if (multiSelectRef.current) {
+            multiSelectRef.current.setSelectedValues(
+              initialData.classrooms.map(String)
+            );
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching classrooms:", error);
+        });
+
+
     } else if (isOpen) {
       form.reset({
         title: undefined,
@@ -126,13 +152,36 @@ export function MentorDialog({
         mentorImage: undefined,
       });
     }
-  }, [isOpen, initialData, form]);
+  }, [isOpen, initialData, form, multiSelectRef]);
+
+  async function fetchClassroomById(classroomId: number) {
+    const token = await getToken({ template: "skillmentor-auth-frontend" });
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/academic/classroom/${classroomId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error(`Failed to fetch classroom with ID ${classroomId}`);
+
+      const classroom = await response.json();
+      return classroom;
+
+    } catch (error) {
+      console.error("Error fetching classroom:", error);
+      return null;
+    }
+  }
+
 
   async function fetchClassesNotAssignedMentor() {
     const token = await getToken({ template: "skillmentor-auth-frontend" });
 
     try {
-      const response = await fetch(`${BACKEND_URL}/academic/classroom`, {
+      const response = await fetch(`${BACKEND_URL}/academic/classroom/unassigned`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -142,7 +191,7 @@ export function MentorDialog({
       if (!response.ok) throw new Error(`Failed to fetch classrooms`);
 
       const classrooms = await response.json();
-      setClasses(classrooms.filter((classroom: MentorClass) => classroom.mentor === null));
+      setClasses(classrooms);
 
     } catch (error) {
       console.error("Error fetching classes:", error);
@@ -150,22 +199,31 @@ export function MentorDialog({
 
   }
 
+
   async function onSubmit(data: UnifiedFormValues) {
     const token = await getToken({ template: "skillmentor-auth-frontend" });
 
     try {
+      const titleKey = Object.keys(TitleEnum).find(
+        (key) => TitleEnum[key as keyof typeof TitleEnum] === data.title);
+
+
+      const mentor = {
+        title: titleKey,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        phone_number: data.phoneNumber,
+        address: data.address,
+        profession: data.profession,
+        qualification: data.qualification,
+        session_fee: data.sessionFee,
+        subject: data.subject,
+        classrooms: data.classes.map(Number),
+      }
       const formData = new FormData();
-      formData.append("title", data.title);
-      formData.append("first_name", data.firstName);
-      formData.append("last_name", data.lastName);
-      formData.append("email", data.email);
-      formData.append("phone_number", data.phoneNumber);
-      formData.append("address", data.address);
-      formData.append("profession", data.profession);
-      formData.append("qualification", data.qualification);
-      formData.append("session_fee", data.sessionFee.toString());
-      formData.append("subject", data.subject);
-      formData.append("classroom_id_list", JSON.stringify(data.classes.map(Number)));
+      const mentorDataBlob = new Blob([JSON.stringify(mentor)], { type: 'application/json' });
+      formData.append("mentor", mentorDataBlob);
 
       if (data.mentorImage instanceof File) {
         formData.append("mentor_image", data.mentorImage);
@@ -232,8 +290,10 @@ export function MentorDialog({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(TitleEnum).map(([key, value]) => (
-                            <SelectItem key={key} value={key}>{value}</SelectItem>
+                          {Object.values(TitleEnum).map((title) => (
+                            <SelectItem key={title} value={title}>
+                              {title}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -344,6 +404,7 @@ export function MentorDialog({
                       <FormLabel>Classes</FormLabel>
                       <FormControl>
                         <MultiSelect
+                          ref={multiSelectRef}
                           options={options}
                           onValueChange={field.onChange}
                           defaultValue={field.value}
