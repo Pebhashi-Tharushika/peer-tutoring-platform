@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
@@ -84,7 +83,7 @@ public class ClassRoomController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-    @PreAuthorize(Constants.STUDENT_ROLE_PERMISSION)
+    @PreAuthorize(Constants.ADMIN_OR_STUDENT_PERMISSION)
     @GetMapping(value = "/classroom/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClassRoomDTO> getClassRoomById(
             @Parameter(description = "ID of the classroom to retrieve")
@@ -93,6 +92,27 @@ public class ClassRoomController {
     ) {
         ClassRoomDTO classroom = classRoomService.findClassRoomById(id);
         return ResponseEntity.status(HttpStatus.OK).body(classroom);
+    }
+
+
+    @Operation(
+            summary = "Retrieve classrooms without an assigned mentor",
+            description = "Returns a list of all classrooms where no mentor has been assigned (mentor field is null)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Classroom/Classrooms retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid classroom data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "No classrooms found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "503", description = "Service unavailable")
+    })
+    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
+    @GetMapping(value = "/classroom/unassigned", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ClassRoomDTO>> getClassroomsWithoutMentor() {
+        List<ClassRoomDTO> classrooms = classRoomService.getClassroomsWithoutMentor();
+        return ResponseEntity.status(HttpStatus.OK).body(classrooms);
     }
 
 

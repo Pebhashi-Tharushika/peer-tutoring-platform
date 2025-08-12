@@ -1,15 +1,14 @@
 package com.mbpt.peertutoringplatform.mapper;
 
 
-import com.mbpt.peertutoringplatform.entity.MentorEntity;
 import com.mbpt.peertutoringplatform.dto.MentorDTO;
+import com.mbpt.peertutoringplatform.entity.MentorEntity;
 
 public class MentorEntityDTOMapper {
 
     public static MentorDTO map(MentorEntity mentorEntity) {
         MentorDTO mentorDTO = new MentorDTO();
         mentorDTO.setMentorId(mentorEntity.getMentorId());
-        mentorDTO.setClerkMentorId(mentorEntity.getClerkMentorId());
         mentorDTO.setFirstName(mentorEntity.getFirstName());
         mentorDTO.setLastName(mentorEntity.getLastName());
         mentorDTO.setEmail(mentorEntity.getEmail());
@@ -29,7 +28,6 @@ public class MentorEntityDTOMapper {
     public static MentorEntity map(MentorDTO mentorDTO) {
         MentorEntity mentorEntity = new MentorEntity();
         mentorEntity.setMentorId(mentorDTO.getMentorId());
-        mentorEntity.setClerkMentorId(mentorDTO.getClerkMentorId());
         mentorEntity.setFirstName(mentorDTO.getFirstName());
         mentorEntity.setLastName(mentorDTO.getLastName());
         mentorEntity.setEmail(mentorDTO.getEmail());

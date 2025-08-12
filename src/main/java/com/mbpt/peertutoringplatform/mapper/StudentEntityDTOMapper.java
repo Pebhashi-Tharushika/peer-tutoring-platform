@@ -1,9 +1,9 @@
 package com.mbpt.peertutoringplatform.mapper;
 
-import com.mbpt.peertutoringplatform.entity.StudentEntity;
 import com.mbpt.peertutoringplatform.dto.StudentDTO;
+import com.mbpt.peertutoringplatform.entity.StudentEntity;
 
-public class StudentEntityDTOMapper{
+public class StudentEntityDTOMapper {
 
     public static StudentDTO map(StudentEntity studentEntity) {
         StudentDTO studentDTO = new StudentDTO();
@@ -18,7 +18,7 @@ public class StudentEntityDTOMapper{
         return studentDTO;
     }
 
-    public static StudentEntity map(StudentDTO studentDTO){
+    public static StudentEntity map(StudentDTO studentDTO) {
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setStudentId(studentDTO.getStudentId());
         studentEntity.setClerkStudentId(studentDTO.getClerkStudentId());

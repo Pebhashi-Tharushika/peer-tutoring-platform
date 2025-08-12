@@ -1,6 +1,7 @@
 package com.mbpt.peertutoringplatform.controller;
 
 import com.mbpt.peertutoringplatform.common.Constants;
+import com.mbpt.peertutoringplatform.dto.LiteMentorDTO;
 import com.mbpt.peertutoringplatform.dto.MentorDTO;
 import com.mbpt.peertutoringplatform.dto.MentorProfileDTO;
 import com.mbpt.peertutoringplatform.service.MentorService;
@@ -10,13 +11,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -43,12 +44,14 @@ public class MentorController {
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @PostMapping(value = "/mentors", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createMentor(
+    @PostMapping(value = "/mentor", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MentorDTO> createMentor(
             @Parameter(description = "Mentor details to create", required = true)
-            @Valid @RequestBody MentorDTO mentorDTO) {
-        MentorDTO savedDTO = mentorService.createMentor(mentorDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedDTO);
+            @Valid @RequestPart("mentor") LiteMentorDTO mentorDTO,
+            @Parameter(description = "Mentor's profile picture", required = true)
+            @RequestPart("mentor_image") MultipartFile mentorImage) {
+        MentorDTO savedMentor = mentorService.createMentor(mentorDTO, mentorImage);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedMentor);
     }
 
     @Operation(summary = "Get details of all mentors", description = "Fetches a list of all registered mentors with associated data")
@@ -59,34 +62,11 @@ public class MentorController {
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
     @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-    @GetMapping(value = "/mentors", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MentorDTO>> getAllMentors(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String classroom,
-            @RequestParam(required = false) String profession,
-            @RequestParam(required = false) Boolean isVerified
-    ) {
-        final List<MentorDTO> allMentors = mentorService.getAllMentors(name, classroom, profession, isVerified);
+    @GetMapping(value = "/mentor", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MentorDTO>> getAllMentors() {
+        final List<MentorDTO> allMentors = mentorService.getAllMentors();
         return ResponseEntity.status(HttpStatus.OK).body(allMentors);
     }
-
-
-    @Operation(summary = "Get mentor by Clerk ID", description = "Retrieves a single mentor using their unique Clerk ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mentor retrieved successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid mentor Clerk ID"),
-            @ApiResponse(responseCode = "404", description = "Mentor not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
-            @ApiResponse(responseCode = "503", description = "Service unavailable")
-    })
-    @GetMapping(value = "/mentors/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MentorDTO> getMentorByClerkId(
-            @Parameter(description = "Clerk ID of the mentor to retrieve", required = true)
-            @PathVariable @NotBlank(message = "Mentor Clerk ID must not be blank") String id) {
-        MentorDTO mentor = mentorService.findMentorByClerkId(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mentor);
-    }
-
 
 
     @Operation(summary = "Retrieve mentor profile by mentor ID", description = "Retrieve mentor profile details and its associated data")
@@ -99,7 +79,7 @@ public class MentorController {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "503", description = "Service unavailable")
     })
-    @GetMapping("/mentors/profile/{id}")
+    @GetMapping("/mentor/profile/{id}")
     public ResponseEntity<MentorProfileDTO> getMentorProfile(@PathVariable Integer id) {
         MentorProfileDTO mentorProfile = mentorService.getMentorProfile(id);
         return ResponseEntity.status(HttpStatus.OK).body(mentorProfile);

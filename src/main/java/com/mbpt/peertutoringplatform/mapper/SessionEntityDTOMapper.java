@@ -1,7 +1,7 @@
 package com.mbpt.peertutoringplatform.mapper;
 
-import com.mbpt.peertutoringplatform.entity.SessionEntity;
 import com.mbpt.peertutoringplatform.dto.SessionDTO;
+import com.mbpt.peertutoringplatform.entity.SessionEntity;
 
 public class SessionEntityDTOMapper {
 

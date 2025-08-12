@@ -1,9 +1,9 @@
 package com.mbpt.peertutoringplatform.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mbpt.peertutoringplatform.common.Constants;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

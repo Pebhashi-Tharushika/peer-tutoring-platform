@@ -8,14 +8,14 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.mbpt.peertutoringplatform.service.FileService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.util.List;
 
+@Slf4j
 @Service
 public class FileServiceImpl implements FileService {
 
@@ -25,19 +25,16 @@ public class FileServiceImpl implements FileService {
     private String awsS3SecretKey;
 
     @Override
-    public String uploadImage(MultipartFile imageFile) {
-        return saveFileToAWSS3Bucket(imageFile);
+    public String uploadImage(MultipartFile imageFile, String folderName) {
+        return saveFileToAWSS3Bucket(imageFile, folderName);
     }
 
-//    @Override
-//    public List<FileEntity> getAllFiles() {
-//        return fileRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-//    }
 
-
-    private String saveFileToAWSS3Bucket(MultipartFile file) {
+    private String saveFileToAWSS3Bucket(MultipartFile file, String folderName) {
         try {
             String s3FileName = file.getOriginalFilename();
+
+            String s3ObjectKey = folderName + "/" + s3FileName;
 
             BasicAWSCredentials awsCredentials = new BasicAWSCredentials(awsS3AccessKey, awsS3SecretKey);
 
@@ -52,11 +49,11 @@ public class FileServiceImpl implements FileService {
             objectMetadata.setContentType("image/jpeg");
 
             String bucketName = "peer-tutor-image-bucket";
-            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, s3FileName, inputStream, objectMetadata);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, s3ObjectKey, inputStream, objectMetadata);
             amazonS3Client.putObject(putObjectRequest);
-            return "https://" + bucketName + ".s3.amazonaws.com/" + s3FileName;
+            return String.format("https://%s.s3.amazonaws.com/%s/%s", bucketName, folderName, s3FileName);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to upload image file: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -48,4 +47,15 @@ public class ClassRoomEntity {
     @OneToMany(mappedBy = "classRoomEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SessionEntity> sessionEntityList = new ArrayList<>();
 
+    @Override
+    public String toString() {
+        return "ClassRoomEntity{" +
+                "classRoomId=" + classRoomId +
+                ", title='" + title + '\'' +
+                ", enrolledStudentCount=" + enrolledStudentCount +
+                ", classImage='" + classImage + '\'' +
+                ", mentorID='" + mentorEntity.getMentorId() + '\'' +
+                ", sessionEntityList=" + sessionEntityList +
+                '}';
+    }
 }

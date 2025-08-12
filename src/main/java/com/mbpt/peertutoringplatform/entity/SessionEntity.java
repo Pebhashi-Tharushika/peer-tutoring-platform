@@ -53,4 +53,18 @@ public class SessionEntity {
     @Column(name = "session_status", nullable = false)
     @Enumerated(EnumType.STRING) // Stores enum as a string in the database
     private Constants.SessionStatus sessionStatus = Constants.SessionStatus.PENDING;
+
+    @Override
+    public String toString() {
+        return "SessionEntity{" +
+                "sessionId=" + sessionId +
+                ", classRoomId=" + classRoomEntity.getClassRoomId() +
+                ", mentorId=" + mentorEntity.getMentorId() +
+                ", studentId=" + studentEntity.getStudentId() +
+                ", topic='" + topic + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", sessionStatus=" + sessionStatus +
+                '}';
+    }
 }

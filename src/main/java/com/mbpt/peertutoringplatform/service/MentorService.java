@@ -1,7 +1,9 @@
 package com.mbpt.peertutoringplatform.service;
 
+import com.mbpt.peertutoringplatform.dto.LiteMentorDTO;
 import com.mbpt.peertutoringplatform.dto.MentorDTO;
 import com.mbpt.peertutoringplatform.dto.MentorProfileDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,32 +18,18 @@ public interface MentorService {
      * Create a new mentor records.
      *
      * @param mentorDTO the data transfer object containing mentor details
+     * @param image     the image of the mentor
      * @return the created {@link MentorDTO } with generated mentor ID
      */
-    MentorDTO createMentor(MentorDTO mentorDTO);
+    MentorDTO createMentor(LiteMentorDTO mentorDTO, MultipartFile image);
 
 
     /**
-     * Retrieves a list of mentors filtered by optional criteria such as name, classroom title, profession and
-     * verification status.
+     * Retrieves a list of mentors
      *
-     * @param name       the name (or partial name) of the mentor to search for (optional)
-     * @param classroom  the title of the classroom conducted by the mentor (optional)
-     * @param profession the profession of the mentor (optional)
-     * @param isVerified whether the mentor is certified (optional)
      * @return a list of {@link MentorDTO} objects that match the given filters
      */
-    List<MentorDTO> getAllMentors(String name, String classroom, String profession, Boolean isVerified);
-
-
-    /**
-     * Retrieves a mentor by mentor Clerk ID.
-     *
-     * @param clerkId the ID generated for the mentor by Clerk, to retrieve
-     * @return a {@link MentorDTO } object representing the mentor
-     */
-    MentorDTO findMentorByClerkId(String clerkId);
-
+    List<MentorDTO> getAllMentors();
 
     MentorProfileDTO getMentorProfile(Integer id);
 }

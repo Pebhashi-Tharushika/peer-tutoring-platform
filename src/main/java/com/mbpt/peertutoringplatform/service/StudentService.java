@@ -23,7 +23,6 @@ public interface StudentService {
     /**
      * Retrieves all students, optionally filtered by age.
      *
-     *
      * @return a list of StudentDTO objects representing the students
      */
     List<StudentDTO> getAllStudents();

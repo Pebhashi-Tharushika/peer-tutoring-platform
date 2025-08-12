@@ -3,6 +3,7 @@ package com.mbpt.peertutoringplatform.service.impl;
 import com.mbpt.peertutoringplatform.dto.ClassRoomDTO;
 import com.mbpt.peertutoringplatform.dto.MentorDTO;
 import com.mbpt.peertutoringplatform.entity.ClassRoomEntity;
+import com.mbpt.peertutoringplatform.entity.MentorEntity;
 import com.mbpt.peertutoringplatform.exception.ResourceNotFoundException;
 import com.mbpt.peertutoringplatform.mapper.ClassRoomEntityDTOMapper;
 import com.mbpt.peertutoringplatform.mapper.MentorEntityDTOMapper;
@@ -38,11 +39,11 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public ClassRoomDTO createClassRoom(String title, MultipartFile classImage) {
         log.info("Creating new classroom...");
 
-        if (classImage == null || classImage.isEmpty() || title == null || title.isBlank() ) {
+        if (classImage == null || classImage.isEmpty() || title == null || title.isBlank()) {
             log.error("Failed to create classroom: input data is invalid.");
             throw new IllegalArgumentException("Classroom data are required");
         }
-        String imageUrl = fileService.uploadImage(classImage);
+        String imageUrl = fileService.uploadImage(classImage, "classrooms");
 
         log.debug("image url received: {}", imageUrl);
 
@@ -87,7 +88,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public ClassRoomDTO findClassRoomById(Integer id) {
         log.info("Fetching classroom by ID: {} ...", id);
 
-        if(id == null) throw new IllegalArgumentException("Classroom id is required");
+        if (id == null) throw new IllegalArgumentException("Classroom id is required");
 
         return classRoomRepository.findById(id)
                 .map(classRoom -> {
@@ -103,13 +104,26 @@ public class ClassRoomServiceImpl implements ClassRoomService {
                 });
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClassRoomDTO> getClassroomsWithoutMentor() {
+        log.info("Fetching classrooms without an assigned mentor...");
+
+        List<ClassRoomDTO> classRoomDTOS = classRoomRepository.findAllByMentorEntityIsNull()
+                .stream().map(ClassRoomEntityDTOMapper::map).toList();
+
+        log.info("Found {} classrooms without an assigned mentor from data-source: {}", classRoomDTOS.size(), this.datasource);
+
+        return classRoomDTOS;
+    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ClassRoomDTO updateClassRoomById(Integer id, String title, MultipartFile classImage, String imageUrl) {
         log.info("Updating classroom with id: {} ...", id);
 
-        if(id == null || title == null) throw new IllegalArgumentException("Classroom id and title are required");
+        if (id == null || title == null) throw new IllegalArgumentException("Classroom id and title are required");
 
         ClassRoomEntity classRoomEntity = classRoomRepository.findById(id)
                 .orElseThrow(() -> {
@@ -120,7 +134,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         classRoomEntity.setTitle(title);
 
         if (classImage != null && !classImage.isEmpty()) {
-            String newImageUrl = fileService.uploadImage(classImage);
+            String newImageUrl = fileService.uploadImage(classImage, "classrooms");
             classRoomEntity.setClassImage(newImageUrl);
         } else if (imageUrl != null && !imageUrl.isBlank()) {
             classRoomEntity.setClassImage(imageUrl);
@@ -130,7 +144,11 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
         log.info("Updated classroom with ID: {}", id);
 
-        return ClassRoomEntityDTOMapper.map(updatedClassroomEntity);
+        ClassRoomDTO classRoomDTO = ClassRoomEntityDTOMapper.map(updatedClassroomEntity);
+        MentorEntity assignedMentor = updatedClassroomEntity.getMentorEntity();
+        if (assignedMentor != null) classRoomDTO.setMentorDTO(MentorEntityDTOMapper.map(assignedMentor));
+
+        return classRoomDTO;
     }
 
 
@@ -139,13 +157,21 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public ClassRoomDTO deleteClassRoomById(Integer id) {
         log.info("Deleting classroom with ID: {} ...", id);
 
-        if(id == null) throw new IllegalArgumentException("Classroom id is required");
+        if (id == null) throw new IllegalArgumentException("Classroom id is required");
 
         ClassRoomEntity classRoomEntity = classRoomRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Failed to delete classroom. Classroom not found with ID: {}", id);
                     return new ResourceNotFoundException("Failed to delete classroom. Classroom not found with ID: " + id);
                 });
+
+        MentorEntity mentorEntity = classRoomEntity.getMentorEntity();
+        if (mentorEntity.getClassRoomEntityList().size() == 1) {
+            String errorMessage = String.format("Failed to delete classroom. Please delete or assign the classroom to mentor with ID: %S, before deleting classroom",
+                    mentorEntity.getMentorId());
+            throw new IllegalArgumentException(errorMessage);
+        }
+
         classRoomRepository.deleteById(id);
         log.info("Deleted classroom with ID: {} ", id);
         return ClassRoomEntityDTOMapper.map(classRoomEntity);

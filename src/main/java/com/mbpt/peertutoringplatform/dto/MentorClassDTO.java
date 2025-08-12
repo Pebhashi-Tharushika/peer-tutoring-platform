@@ -20,9 +20,9 @@ public class MentorClassDTO {
     @Schema(description = "The official name or title of the classroom", example = "CISSP Exam Prep", requiredMode = Schema.RequiredMode.REQUIRED)
     private String classroomName;
 
-    @NotNull(message = "The number of sessions must not be null")
-    @Min(value = 0, message = "The number of sessions must be non-negative")
     @JsonProperty("session_count")
     @Schema(description = "Total number of sessions conducted by the mentor in this classroom", example = "32", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Long sessionCount;
+    @NotNull(message = "The number of sessions must not be null")
+    @Min(value = 0, message = "The number of sessions must be non-negative")
+    private Integer sessionCount;
 }

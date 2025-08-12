@@ -14,8 +14,8 @@ public interface ClassRoomService {
     /**
      * Create a new classroom records.
      *
-     * @param title the data transfer object containing classroom details
-     * @param  classImage image of class
+     * @param title      the title of the classroom
+     * @param classImage the image of the classroom
      * @return the created {@link ClassRoomDTO } with generated classroom ID
      */
     ClassRoomDTO createClassRoom(String title, MultipartFile classImage);
@@ -32,10 +32,10 @@ public interface ClassRoomService {
     /**
      * Updates an existing classroom's details.
      *
-     * @param id the ID of the classroom to delete
-     * @param title the new title of the classroom
+     * @param id         the ID of the classroom to delete
+     * @param title      the new title of the classroom
      * @param classImage the new classroom image
-     * @param imageUrl the url of the new classroom image
+     * @param imageUrl   the url of the new classroom image
      * @return the {@link ClassRoomDTO}  object representing the updated classroom
      */
     ClassRoomDTO updateClassRoomById(Integer id, String title, MultipartFile classImage, String imageUrl);
@@ -57,4 +57,12 @@ public interface ClassRoomService {
      * @return a {@link ClassRoomDTO} object matching the provided ID
      */
     ClassRoomDTO findClassRoomById(Integer id);
+
+    /**
+     * Retrieves all classrooms that have not been assigned a mentor yet.
+     * A classroom is considered unassigned if its mentor entity is {@code null}.
+     *
+     * @return a list of {@link ClassRoomDTO} objects representing classrooms without an assigned mentor
+     */
+    List<ClassRoomDTO> getClassroomsWithoutMentor();
 }

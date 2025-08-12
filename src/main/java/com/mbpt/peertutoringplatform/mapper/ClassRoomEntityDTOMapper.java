@@ -1,7 +1,7 @@
 package com.mbpt.peertutoringplatform.mapper;
 
-import com.mbpt.peertutoringplatform.entity.ClassRoomEntity;
 import com.mbpt.peertutoringplatform.dto.ClassRoomDTO;
+import com.mbpt.peertutoringplatform.entity.ClassRoomEntity;
 
 public class ClassRoomEntityDTOMapper {
 

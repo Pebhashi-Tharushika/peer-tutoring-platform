@@ -1,5 +1,6 @@
 package com.mbpt.peertutoringplatform.service.impl;
 
+import com.mbpt.peertutoringplatform.dto.LiteMentorDTO;
 import com.mbpt.peertutoringplatform.dto.MentorClassDTO;
 import com.mbpt.peertutoringplatform.dto.MentorDTO;
 import com.mbpt.peertutoringplatform.dto.MentorProfileDTO;
@@ -10,11 +11,13 @@ import com.mbpt.peertutoringplatform.mapper.MentorEntityDTOMapper;
 import com.mbpt.peertutoringplatform.repository.ClassRoomRepository;
 import com.mbpt.peertutoringplatform.repository.MentorRepository;
 import com.mbpt.peertutoringplatform.repository.SessionRepository;
+import com.mbpt.peertutoringplatform.service.FileService;
 import com.mbpt.peertutoringplatform.service.MentorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,32 +35,33 @@ public class MentorServiceImpl implements MentorService {
 
     private final SessionRepository sessionRepository;
 
-    public MentorServiceImpl(MentorRepository mentorRepository, ClassRoomRepository classRoomRepository, SessionRepository sessionRepository) {
+    private final FileService fileService;
+
+    public MentorServiceImpl(MentorRepository mentorRepository, ClassRoomRepository classRoomRepository, SessionRepository sessionRepository, FileService fileService) {
         this.mentorRepository = mentorRepository;
         this.classRoomRepository = classRoomRepository;
         this.sessionRepository = sessionRepository;
+        this.fileService = fileService;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MentorDTO createMentor(MentorDTO mentorDTO) {
+    public MentorDTO createMentor(LiteMentorDTO liteMentorDTO, MultipartFile image) {
         log.info("Creating new mentor...");
 
-        if (mentorDTO == null) {
-            log.error("Failed to create mentor: input DTO is null.");
-            throw new IllegalArgumentException("Mentor data must not be null.");
+        if (image == null || image.isEmpty() || liteMentorDTO == null) {
+            log.error("Failed to create mentor: input data is invalid.");
+            throw new IllegalArgumentException("Mentor data are required.");
         }
 
-        log.debug("MentorDTO received: {}", mentorDTO);
+        String imageUrl = fileService.uploadImage(image, "mentors");
 
-        if (mentorDTO.getMentorId() != null) {
-            log.warn("Attempted to create a mentor that already exists with ID: {}", mentorDTO.getMentorId());
-            throw new IllegalArgumentException("New Mentor should not already have an ID.");
-        }
+        log.debug("image url received: {}", imageUrl);
+
+        MentorDTO mentorDTO = getMentorDTO(liteMentorDTO, imageUrl);
 
         MentorEntity mentorEntity = MentorEntityDTOMapper.map(mentorDTO);
-        mentorEntity.setPositiveReviews(0);
-        mentorEntity.setIsCertified(false);
+
         MentorEntity savedMentor = mentorRepository.save(mentorEntity);
 
         List<Integer> classRoomIdList = mentorDTO.getClassRoomIdList();
@@ -85,12 +89,32 @@ public class MentorServiceImpl implements MentorService {
         return savedMentorDTO;
     }
 
+    private static MentorDTO getMentorDTO(LiteMentorDTO liteMentorDTO, String imageUrl) {
+        MentorDTO mentorDTO = new MentorDTO();
+
+        mentorDTO.setFirstName(liteMentorDTO.getFirstName());
+        mentorDTO.setLastName(liteMentorDTO.getLastName());
+        mentorDTO.setAddress(liteMentorDTO.getAddress());
+        mentorDTO.setEmail(liteMentorDTO.getEmail());
+        mentorDTO.setPhoneNumber(liteMentorDTO.getPhoneNumber());
+        mentorDTO.setProfession(liteMentorDTO.getProfession());
+        mentorDTO.setQualification(liteMentorDTO.getQualification());
+        mentorDTO.setSubject(liteMentorDTO.getSubject());
+        mentorDTO.setSessionFee(liteMentorDTO.getSessionFee());
+        mentorDTO.setTitle(liteMentorDTO.getTitle());
+        mentorDTO.setClassRoomIdList(liteMentorDTO.getClassRoomIdList());
+        mentorDTO.setMentorImage(imageUrl);
+        mentorDTO.setPositiveReviews(0);
+        mentorDTO.setIsCertified(false);
+        return mentorDTO;
+    }
+
     @Override
     @Transactional(readOnly = true)
-    public List<MentorDTO> getAllMentors(String name, String classroom, String profession, Boolean isVerified) {
+    public List<MentorDTO> getAllMentors() {
         log.info("Fetching all mentors...");
 
-        List<MentorEntity> mentorEntityList = mentorRepository.findAllMentors(name, classroom, profession, isVerified);
+        List<MentorEntity> mentorEntityList = mentorRepository.findAll();
 
         List<MentorDTO> mentorDTOList = mentorEntityList.stream().map(mentorEntity -> {
             MentorDTO mentorDTO = MentorEntityDTOMapper.map(mentorEntity);
@@ -106,22 +130,6 @@ public class MentorServiceImpl implements MentorService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public MentorDTO findMentorByClerkId(String clerkId) {
-        log.info("Fetching mentor by Clerk ID...");
-        return mentorRepository.findByClerkMentorId(clerkId)
-                .map(mentorEntity -> {
-                    log.info("Mentor found: {}", mentorEntity);
-                    return MentorEntityDTOMapper.map(mentorEntity);
-                })
-                .orElseThrow(() -> {
-                    log.error("Mentor not found with ID: {} from data-source:{}", clerkId, this.datasource);
-                    return new ResourceNotFoundException("Mentor not found with Clerk ID: " + clerkId);
-                });
-    }
-
-
-    @Override
     public MentorProfileDTO getMentorProfile(Integer id) {
         MentorEntity mentor = mentorRepository.findById(id).orElseThrow(() -> {
             log.error("Mentor not found with ID: {}", id);
@@ -130,7 +138,7 @@ public class MentorServiceImpl implements MentorService {
         MentorDTO mentorDTO = MentorEntityDTOMapper.map(mentor);
         mentorDTO.setClassRoomIdList(mentor.getClassRoomEntityList().stream().map(ClassRoomEntity::getClassRoomId).collect(Collectors.toList()));
         List<MentorClassDTO> mentorClassDTOS = mentor.getClassRoomEntityList().stream().map(cls -> {
-            long count = sessionRepository.countByClassRoomEntity_ClassRoomIdAndMentorEntity_MentorId(cls.getClassRoomId(), mentor.getMentorId());
+            Integer count = sessionRepository.countByClassRoomIdAndMentorId(cls.getClassRoomId(), mentor.getMentorId());
             return new MentorClassDTO(cls.getTitle(), count);
         }).toList();
         return new MentorProfileDTO(mentorDTO, mentorClassDTOS);

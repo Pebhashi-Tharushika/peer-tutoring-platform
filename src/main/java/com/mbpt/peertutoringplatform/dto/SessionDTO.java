@@ -42,7 +42,7 @@ public class SessionDTO {
 
     @NotBlank(message = "Topic must not be blank")
     @JsonProperty("topic")
-    @Schema(description = "The specific topic covered during the session", example = "Introduction to Cloud Computing", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "The official name of the classroom associated with the session", example = "CISSP Exam Prep", requiredMode = Schema.RequiredMode.REQUIRED)
     private String topic;
 
     @NotNull(message = "Start time must not be null")

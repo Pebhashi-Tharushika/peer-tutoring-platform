@@ -54,4 +54,5 @@ public class StudentEntity {
 
     @OneToMany(mappedBy = "studentEntity", fetch = FetchType.EAGER)
     private List<SessionEntity> sessionEntityList = new ArrayList<>();
+
 }

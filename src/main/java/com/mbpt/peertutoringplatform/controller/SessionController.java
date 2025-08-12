@@ -114,7 +114,7 @@ public class SessionController {
             @PathVariable @Min(value = 1, message = "Session ID must be a positive integer")
             @NotNull(message = "Session ID must not be null") Integer sessionId,
             @Parameter(description = "The new status to be assigned to the session. Valid values are: PENDING, ACCEPTED, or COMPLETED. All sessions are initially created with a PENDING status.", required = true)
-            @RequestParam @NotNull(message = "Session status must not be null") Constants.SessionStatus sessionStatus) {
+            @RequestParam(name = "status") @NotNull(message = "Session status must not be null") Constants.SessionStatus sessionStatus) {
         final SessionDTO updatedSession = sessionService.updateSessionStatus(sessionId, sessionStatus);
         return ResponseEntity.status(HttpStatus.OK).body(updatedSession);
     }

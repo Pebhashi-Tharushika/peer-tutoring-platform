@@ -67,23 +67,6 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(studentsList);
     }
 
-//    @Operation(summary = "Get all students", description = "Retrieves all students with optional filters for address, age, and first name")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Students retrieved successfully"),
-//            @ApiResponse(responseCode = "404", description = "No students found"),
-//            @ApiResponse(responseCode = "500", description = "Internal server error"),
-//            @ApiResponse(responseCode = "503", description = "Service unavailable")
-//    })
-//    @PreAuthorize(Constants.ADMIN_ROLE_PERMISSION)
-//    @GetMapping(value = "/student", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<StudentDTO>> getAllStudents(
-//            @Parameter(description = "Filter by address") @RequestParam(required = false) List<String> address,
-//            @Parameter(description = "Filter by age") @RequestParam(required = false) List<Integer> age,
-//            @Parameter(description = "Filter by first name") @RequestParam(required = false) List<String> firstNames) {
-//        final List<StudentDTO> studentsList = studentService.getAllStudents(address, age, firstNames);
-//        return ResponseEntity.ok(studentsList);
-//    }
-
 
     @Operation(summary = "Get student by unique Clerk ID", description = "Fetches a list of students that match the given Clerk ID")
     @ApiResponses(value = {
