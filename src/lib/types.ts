@@ -98,13 +98,13 @@ export enum TitleEnum {
   PROF = "Prof.",
 }
 
-// export interface FullSession {
-//   session_id: number;
-//   student: Student;
-//   class_room: ClassRoom;
-//   mentor: Mentor;
-//   topic: string;
-//   start_time: string;
-//   end_time: string;
-//   session_status: SessionStatus;
-// }
+export interface FullSession {
+  session_id: number;
+  student: Student;
+  class_room: ClassRoom;
+  mentor: Mentor;
+  topic: string;
+  start_time: string;
+  end_time: string;
+  session_status: SessionStatus;
+}
