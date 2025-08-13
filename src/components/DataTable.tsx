@@ -6,7 +6,9 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
+    getPaginationRowModel,
     getSortedRowModel,
+    PaginationState,
     SortingState,
     useReactTable,
 } from "@tanstack/react-table"
@@ -37,7 +39,10 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-   
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+      });
 
     const table = useReactTable({
         data,
@@ -47,14 +52,22 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onPaginationChange: setPagination,
         state: {
             sorting,
-            columnFilters
+            columnFilters,
+            pagination
+        },
+        initialState: {
+            columnPinning: {
+                right: ["accept/complete"],
+            },
         },
     })
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 bg-white">
 
                 {/* Search, Filter and column toggle */}
                 <div className="flex justify-between items-center">
@@ -72,14 +85,17 @@ export function DataTable<TData, TValue>({
                 </div>
 
                 {/* Table */}
-                <div className="overflow-auto rounded-md border">
-                    <Table className="min-w-full">
+                <div className="rounded-md border">
+                    <Table>
                         <TableHeader> 
                             {table.getHeaderGroups().map((headerGroup) => (    
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map((header) => {
                                         return (
-                                            <TableHead key={header.id}>
+                                            <TableHead 
+                                            key={header.id}
+                                            className={header.column.getIsPinned() ? "sticky-column rounded-tr-md" : ""}
+                                            >
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(header.column.columnDef.header, header.getContext())}
@@ -96,7 +112,10 @@ export function DataTable<TData, TValue>({
                                         data-state={row.getIsSelected() && "selected"}
                                     >
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
+                                            <TableCell 
+                                                key={cell.id}
+                                                className={cell.column.getIsPinned() ? "sticky-column" : ""}
+                                            >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
                                         ))}

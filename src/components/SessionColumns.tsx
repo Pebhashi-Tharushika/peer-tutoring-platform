@@ -3,10 +3,9 @@
 import { FullSession } from "@/lib/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "./ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { MoreHorizontal } from "lucide-react"
 import { SortableColumn } from "./SortableColumn"
 import { Checkbox } from "./ui/checkbox"
+import { StatusPill } from "./StatusPill"
 
 type ColumnActions = {
   approveSession: (id: number) => void;
@@ -50,12 +49,12 @@ export const SessionColumns = ({ approveSession, markAsCompleted }: ColumnAction
   },
   {
     accessorFn: row => `${row.student.first_name} ${row.student.last_name}`,
-    id: "student",
+    id: "student_name",
     header: ({ column }) => <SortableColumn column={column} title="Student Name" />,
   },
   {
     accessorFn: row => `${row.mentor.first_name} ${row.mentor.last_name}`,
-    id: "mentor",
+    id: "mentor_name",
     header: ({ column }) => <SortableColumn column={column} title="Mentor Name" />,
   },
   {
@@ -71,31 +70,37 @@ export const SessionColumns = ({ approveSession, markAsCompleted }: ColumnAction
   {
     accessorKey: "session_status",
     header: ({ column }) => <SortableColumn column={column} title="Status" />,
+    cell:({row})=>{
+      return(
+        <StatusPill status={row.original.session_status} />
+      )
+    }
   },
   {
-    id: "actions",
+    id: "accept/complete",
+    header: () => <div className="text-center">Actions</div>,
     cell: ({ row }) => {
-      const session = row.original
+      const session = row.original;
 
       return (
-        <DropdownMenu>
-
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(session.topic)}>Copy Session Topic</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => approveSession(session.session_id)}>Approve Session</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => markAsCompleted(session.session_id)}>Mark As Completed</DropdownMenuItem>
-            <DropdownMenuItem>View More Details</DropdownMenuItem>
-          </DropdownMenuContent>
-
-        </DropdownMenu>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={session.session_status !== "PENDING"}
+            onClick={() => approveSession(session.session_id)}
+          >
+            Approve
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={session.session_status !== "ACCEPTED"}
+            onClick={() => markAsCompleted(session.session_id)}
+          >
+            Complete
+          </Button>
+        </div>
       )
     },
   },

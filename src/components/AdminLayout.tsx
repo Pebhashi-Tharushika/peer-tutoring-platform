@@ -6,7 +6,7 @@ export default function AdminLayout() {
     return (
         <SidebarProvider defaultOpen className="w-auto">
             <AppSidebar side="right" collapsible="icon" className="sticky" />
-            <div className="flex-1 overflow-auto p-4">
+            <div className="flex-1 overflow-auto p-4 bg-white">
                 <Outlet />
             </div>
         </SidebarProvider>

@@ -89,7 +89,7 @@ export default function ClassroomPage() {
     <div>
       <SidebarInset>
         <PageHeader title="Classeroom" subtitle="All Classes" />
-        <div className="p-4">
+        <div className="p-4 bg-white">
           <div className="container mx-auto py-6">
 
             {/* headings and import button, add new button */}

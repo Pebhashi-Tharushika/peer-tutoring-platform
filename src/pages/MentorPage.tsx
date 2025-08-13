@@ -73,7 +73,7 @@ export default function MentorPage() {
     <div>
       <SidebarInset>
         <PageHeader title="Mentor" subtitle="All Mentors" />
-        <div className="p-4">
+        <div className="p-4 bg-white">
           <div className="container mx-auto py-6">
 
             {/* headings and import button, add new button */}
