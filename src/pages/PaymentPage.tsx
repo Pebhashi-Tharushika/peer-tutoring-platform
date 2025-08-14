@@ -35,8 +35,7 @@ export default function PaymentPage() {
     
     async function fetchData() {
       const token = await getToken({ template: "skillmentor-auth-frontend" });
-      console.log("Fetching student data for user:", user?.id);
-      console.log(token);
+  
       const result = await fetch(
         `${BACKEND_URL}/academic/student/${user?.id}`, // Get student by clerk ID
         {

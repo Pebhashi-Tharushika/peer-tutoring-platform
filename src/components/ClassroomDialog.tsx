@@ -19,7 +19,7 @@ import { useAuth } from "@clerk/clerk-react"
 import { BACKEND_URL } from "@/config/env"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog"
 import { ClassRoom, MentorClass } from "@/lib/types"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 
 const baseSchema = z.object({
@@ -64,6 +64,7 @@ export function ClassroomDialog({
   onSaveSuccess
 }: ClassroomDialogProps) {
   const { getToken } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(mode === "create" ? createSchema : editSchema),
@@ -73,21 +74,28 @@ export function ClassroomDialog({
   });
 
   useEffect(() => {
-    if (isOpen && initialData) {
-      form.reset({
-        className: initialData.title,
-        classImage: initialData.class_image,
-      });
-    } else if (isOpen) {
-      form.reset({
-        className: "",
-        classImage: undefined,
-      });
+    if (isOpen) {
+      setIsSubmitting(false);
+
+      if (initialData) {
+        form.reset({
+          className: initialData.title,
+          classImage: initialData.class_image,
+        });
+      } else {
+        form.reset({
+          className: "",
+          classImage: undefined,
+        });
+      }
     }
   }, [isOpen, initialData, form]);
 
 
   async function onSubmit(data: FormValues) {
+
+    setIsSubmitting(true);
+
     const token = await getToken({ template: "skillmentor-auth-frontend" });
 
     try {
@@ -116,11 +124,14 @@ export function ClassroomDialog({
       if (!response.ok) throw new Error(`Failed to ${mode === "create" ? "save" : "update"} classroom`);
 
       const newMentorClass = await response.json();
+
       onSaveSuccess(newMentorClass, mode);
+      
       toast.success(`Classroom ${mode === "create" ? "created" : "updated"} successfully`);
 
     } catch (error) {
       toast.error(`Failed to ${mode === "create" ? "save" : "update"} classroom`);
+      setIsSubmitting(false);
     }
   }
 
@@ -172,7 +183,12 @@ export function ClassroomDialog({
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit">{mode === "create" ? "Save" : "Update"}</Button>
+              <Button 
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? mode === "create" ? "Saving..." : "Updating..." : mode === "create" ? "Save" : "Update"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

@@ -21,7 +21,7 @@ export default function HomePage() {
         }
 
         const data = await response.json();
-        console.log("Fetched mentor classes:", data);
+        
         setMentorClasses(data.filter((classroom: MentorClass) => classroom.mentor !== null));
       } catch (error) {
         console.error("Error fetching mentor classes:", error);

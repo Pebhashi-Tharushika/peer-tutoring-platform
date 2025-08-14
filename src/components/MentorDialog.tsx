@@ -34,7 +34,7 @@ const baseSchema = z.object({
   phoneNumber: z.string().regex(/^\+[1-9]\d{6,14}$/, { message: "Invalid" }),
   address: z.string().min(5, { message: "required*" }),
   profession: z.string().min(2, { message: "required*" }),
-  qualification: z.string().min(2, { message: "required*" }),
+  qualification: z.string({ error: "required*" }),
   sessionFee: z.coerce.number().min(1, { message: "Invalid" }), // Use z.coerce to convert string to number
   subject: z.string().min(10, { message: "must be at least 10 characters" }).max(750, { message: "Subject must not be longer than 750 characters." }),
   classes: z.array(z.string()).nonempty({ message: "at least one class is required*" }),
@@ -70,6 +70,7 @@ export function MentorDialog({
 }: MentorDialogProps) {
   const [classes, setClasses] = useState<MentorClass[]>([]);
   const { getToken } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const options: { label: string; value: string }[] = classes.map(classroom => ({
     value: classroom.class_room_id.toString(),
@@ -86,72 +87,78 @@ export function MentorDialog({
       phoneNumber: initialData?.phone_number ?? "",
       address: initialData?.address ?? "",
       profession: initialData?.profession ?? "",
-      qualification: initialData?.qualification ?? "",
+      qualification: initialData?.qualification.substring(12) ?? "",
       sessionFee: initialData?.session_fee ?? 0,
       subject: initialData?.subject ?? "",
       classes: initialData?.classrooms?.map(String) ?? [],
     },
   });
 
+  console.log(initialData?.qualification);
+  console.log(initialData?.qualification.substring(12));
   const multiSelectRef = useRef<MultiSelectRef>(null);
 
   useEffect(() => {
     fetchClassesNotAssignedMentor();
-    if (isOpen && initialData) {
-
-      form.reset({
-        title: TitleEnum[initialData.title as keyof typeof TitleEnum],
-        firstName: initialData.first_name,
-        lastName: initialData.last_name,
-        email: initialData.email,
-        phoneNumber: initialData.phone_number,
-        address: initialData.address,
-        profession: initialData.profession,
-        qualification: initialData.qualification,
-        sessionFee: initialData.session_fee,
-        subject: initialData.subject,
-        mentorImage: initialData.mentor_image,
-      });
-
-      // set classes to multi-select from the initial data during update
-      const existingClassIds = new Set(classes.map(cls => cls.class_room_id));
-
-      const promisesToFetch = initialData.classrooms.filter(id => !existingClassIds.has(id))
-        .map(id => fetchClassroomById(id));
-
-      Promise.all(promisesToFetch)
-        .then(fetchedClassrooms => {
-          const validFetchedClasses = fetchedClassrooms.filter(Boolean);
-          const finalClasses = [...classes, ...validFetchedClasses];
-          setClasses(finalClasses);
-
-          if (multiSelectRef.current) {
-            multiSelectRef.current.setSelectedValues(
-              initialData.classrooms.map(String)
-            );
-          }
-        })
-        .catch(error => {
-          console.error("Error fetching classrooms:", error);
+    if (isOpen) {
+      setIsSubmitting(false);
+      if (initialData) {
+        
+        form.reset({
+          title: TitleEnum[initialData.title as keyof typeof TitleEnum],
+          firstName: initialData.first_name,
+          lastName: initialData.last_name,
+          email: initialData.email,
+          phoneNumber: initialData.phone_number,
+          address: initialData.address,
+          profession: initialData.profession,
+          qualification: initialData.qualification.substring(12),
+          sessionFee: initialData.session_fee,
+          subject: initialData.subject,
+          mentorImage: initialData.mentor_image,
         });
 
+        // set classes to multi-select from the initial data during update
+        const existingClassIds = new Set(classes.map(cls => cls.class_room_id));
 
-    } else if (isOpen) {
-      form.reset({
-        title: undefined,
-        firstName: "",
-        lastName: "",
-        email: "",
-        phoneNumber: "",
-        address: "",
-        profession: "",
-        qualification: "",
-        sessionFee: 0,
-        subject: "",
-        classes: [],
-        mentorImage: undefined,
-      });
+        const promisesToFetch = initialData.classrooms.filter(id => !existingClassIds.has(id))
+          .map(id => fetchClassroomById(id));
+
+        Promise.all(promisesToFetch)
+          .then(fetchedClassrooms => {
+            const validFetchedClasses = fetchedClassrooms.filter(Boolean);
+            const finalClasses = [...classes, ...validFetchedClasses];
+            setClasses(finalClasses);
+
+            if (multiSelectRef.current) {
+              multiSelectRef.current.setSelectedValues(
+                initialData.classrooms.map(String)
+              );
+            }
+          })
+          .catch(error => {
+            console.error("Error fetching classrooms:", error);
+          });
+
+
+      } else {
+        form.reset({
+          title: undefined,
+          firstName: "",
+          lastName: "",
+          email: "",
+          phoneNumber: "",
+          address: "",
+          profession: "",
+          qualification: "",
+          sessionFee: 0,
+          subject: "",
+          classes: [],
+          mentorImage: undefined,
+        });
+      }
     }
+
   }, [isOpen, initialData, form, multiSelectRef]);
 
   async function fetchClassroomById(classroomId: number) {
@@ -201,6 +208,8 @@ export function MentorDialog({
 
 
   async function onSubmit(data: UnifiedFormValues) {
+    setIsSubmitting(true);
+
     const token = await getToken({ template: "skillmentor-auth-frontend" });
 
     try {
@@ -216,7 +225,7 @@ export function MentorDialog({
         phone_number: data.phoneNumber,
         address: data.address,
         profession: data.profession,
-        qualification: data.qualification,
+        qualification: `Tutor since ${data.qualification}`,
         session_fee: data.sessionFee,
         subject: data.subject,
         classrooms: data.classes.map(Number),
@@ -252,6 +261,7 @@ export function MentorDialog({
 
     } catch (error) {
       toast.error(`Failed to ${mode === "create" ? "save" : "update"} mentor`);
+      setIsSubmitting(false);
     }
   }
 
@@ -417,7 +427,12 @@ export function MentorDialog({
 
                 <DialogFooter className="pt-4">
                   <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-                  <Button type="submit">{mode === "create" ? "Save" : "Update"}</Button>
+                  <Button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  >
+                    {isSubmitting ? mode === "create" ? "Saving..." : "Updating..." : mode === "create" ? "Save" : "Update"}
+                    </Button>
                 </DialogFooter>
               </form>
             </Form>

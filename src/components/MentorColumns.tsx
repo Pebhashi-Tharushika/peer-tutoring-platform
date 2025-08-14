@@ -129,7 +129,7 @@ export const MentorColumns = ({ editMentor, confirmToDeleteMentor }: ColumnActio
             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(cls.title)}>Copy Mentor Name</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => editMentor(cls)}>Edit Mentor</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => confirmToDeleteMentor(cls.mentor_id)}>Delete Mentor</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => confirmToDeleteMentor(cls.mentor_id)} className="text-destructive">Delete Mentor</DropdownMenuItem>
             <DropdownMenuItem>View Mentor Details</DropdownMenuItem>
           </DropdownMenuContent>
 

@@ -7,6 +7,7 @@ import { SchedulingModal } from "@/components/SchedulingModel";
 import { SignupDialog } from "@/components/SignUpDialog";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router";
 
 
 export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
@@ -14,6 +15,7 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
   const [isSignupDialogOpen, setIsSignupDialogOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const { isSignedIn } = useAuth();
+  const navigate = useNavigate();
 
   // Use a simple threshold to decide if the bio is long enough
   const bioTooLong = mentorClass.mentor.subject.length > 200;
@@ -28,7 +30,7 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
 
   return (
     <>
-      <Card className="flex flex-col h-full">
+      <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-102">
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex justify-between items-start mb-4">
             <div className="space-y-2">
@@ -61,7 +63,7 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
               </div>
             </div>
             <div className="w-36">
-              <div className="size-20 flex items-center justify-center">
+              <div className="flex items-center justify-center">
                 {mentorClass.class_image ? (
                   <img
                     src={mentorClass.class_image}
@@ -118,12 +120,19 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
           </div>
         </div>
 
-        <div className="p-6 pt-0">
+        <div className="p-6 pt-0 space-y-2">
           <Button
             onClick={handleSchedule}
-            className="w-full bg-black text-white hover:bg-black/90"
+            className="w-full bg-black text-white hover:bg-black/80"
           >
             Schedule a session
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full text-black hover:text-black hover:shadow-gray-300 hover:bg-white"
+            onClick={() => navigate(`/mentor/${mentorClass.mentor.mentor_id}`)}
+          >
+            See Mentor Profile
           </Button>
         </div>
       </Card>

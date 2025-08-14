@@ -14,6 +14,7 @@ import SessionPage from "./pages/SessionPage";
 import MentorPage from "./pages/MentorPage";
 import StudentPage from "./pages/StudentPage";
 import AdminLayout from "./components/AdminLayout";
+import MentorProfilePage from "./pages/MentorProfilePage";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/redirect" element={<AuthRedirect />} />
           <Route path="/pending-access" element={<PendingAccessPage />} />
+          <Route path="/mentor/:id" element={<MentorProfilePage />} />
           <Route
             path="/dashboard"
             element={

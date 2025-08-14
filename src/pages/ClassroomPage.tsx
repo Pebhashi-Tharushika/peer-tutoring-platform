@@ -21,6 +21,7 @@ export default function ClassroomPage() {
   const [dialogInitialData, setDialogInitialData] = useState<ClassRoom | undefined>(undefined);
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [classroomIdToDelete, setClassroomIdToDelete] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { getToken } = useAuth();
 
   async function confirmToDeleteClassroom(classroomId: number) {
@@ -29,8 +30,10 @@ export default function ClassroomPage() {
   }
 
   async function deleteClassroom() {
-    
+
     if (classroomIdToDelete === null) return;
+
+    setIsDeleting(true);
 
     try {
       const token = await getToken({ template: "skillmentor-auth-frontend" });
@@ -40,18 +43,22 @@ export default function ClassroomPage() {
           Authorization: `Bearer ${token}`,
         })
       });
-
-      if (!response.ok) throw new Error('Failed to delete classroom');
-
+      
+      if (!response.ok){ 
+        const errorData = await response.json();
+        toast.error(errorData.message); 
+        throw new Error(errorData.message);
+      }
       setClasses(classes.filter(c => c.class_room_id !== classroomIdToDelete));
       toast.success("Classroom deleted successfully");
 
     } catch (error) {
-      console.error("Delete failed", error);
-      toast.error("Failed to delete classroom.")
+      console.error(error);
+      
     } finally {
       setIsAlertDialogOpen(false);
       setClassroomIdToDelete(null);
+      setIsDeleting(false); // Reset deleting state after operation
     }
   }
 
@@ -129,8 +136,11 @@ export default function ClassroomPage() {
 
             <AlertConfirmationDialog
               isOpen={isAlertDialogOpen}
-              onOpenChange={setIsAlertDialogOpen}
+              onOpenChange={(open) => !isDeleting && setIsAlertDialogOpen(open)}
+              // onOpenChange={setIsAlertDialogOpen}
               onConfirm={deleteClassroom}
+              isDisabledButton={isDeleting}
+              buttonName={isDeleting ? "Deleting" : "Delete"}
               title="Are you absolutely sure?"
               description="This action cannot be undone. This will permanently delete the classroom."
             />

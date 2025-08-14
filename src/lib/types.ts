@@ -108,3 +108,13 @@ export interface FullSession {
   end_time: string;
   session_status: SessionStatus;
 }
+
+export interface MentorProfile{
+  mentor:Mentor
+  mentor_classes: MentorClassWithSessions[];
+}
+
+export interface MentorClassWithSessions {
+  classroom_name: string;
+  session_count: number;
+}

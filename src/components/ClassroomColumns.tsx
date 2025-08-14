@@ -89,7 +89,7 @@ export const ClassroomColumns = ({ editClassroom, confirmToDeleteClassroom }: Co
             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(cls.title)}>Copy Classroom Title</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => editClassroom(classroomData)}>Edit Classroom</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => confirmToDeleteClassroom(cls.class_room_id)}>Delete Classroom</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => confirmToDeleteClassroom(cls.class_room_id)} className="text-destructive">Delete Classroom</DropdownMenuItem>
             <DropdownMenuItem>View Mentor Details</DropdownMenuItem>
           </DropdownMenuContent>
 

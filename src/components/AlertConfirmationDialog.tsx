@@ -12,7 +12,9 @@ import {
 type AlertConfirmationDialogProps = {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
-    onConfirm: () => void;
+    onConfirm: () => Promise<void>;
+    isDisabledButton: boolean;
+    buttonName: string;
     title: string;
     description: string;
 };
@@ -21,6 +23,8 @@ export default function AlertConfirmationDialog({
     isOpen,
     onOpenChange,
     onConfirm,
+    isDisabledButton,
+    buttonName,
     title,
     description,
 }: AlertConfirmationDialogProps) {
@@ -32,8 +36,13 @@ export default function AlertConfirmationDialog({
                     <AlertDialogDescription>{description}</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => onOpenChange(false)}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+                    <AlertDialogCancel >Cancel</AlertDialogCancel>
+                    <AlertDialogAction 
+                        onClick={onConfirm}
+                        disabled={isDisabledButton}
+                    >
+                        {buttonName}
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

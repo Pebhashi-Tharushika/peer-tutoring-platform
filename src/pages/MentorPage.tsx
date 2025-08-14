@@ -20,6 +20,7 @@ export default function MentorPage() {
   const [dialogInitialData, setDialogInitialData] = useState<Mentor | undefined>(undefined);
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [mentorIdToDelete, setMentorIdToDelete] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { getToken } = useAuth();
 
   async function confirmToDeleteMentor(mentorId: number) {
@@ -28,11 +29,14 @@ export default function MentorPage() {
   }
 
   async function deleteMentor() {
+    setIsDeleting(true);
     //Todo: Implement delete mentor functionality
     console.log("deleted Mentor with mentorId:", mentorIdToDelete);
     setIsAlertDialogOpen(false);
     setMentorIdToDelete(null);
+    setIsDeleting(false); // Reset deleting state after operation
   }
+
 
   async function fetchAllMentors() {
 
@@ -113,8 +117,10 @@ export default function MentorPage() {
 
             <AlertConfirmationDialog
               isOpen={isAlertDialogOpen}
-              onOpenChange={setIsAlertDialogOpen}
+              onOpenChange={(open) => !isDeleting && setIsAlertDialogOpen(open)}
               onConfirm={deleteMentor}
+              isDisabledButton={isDeleting}
+              buttonName={isDeleting ? "Deleting" : "Delete"}
               title="Are you absolutely sure?"
               description="This action cannot be undone. This will permanently delete the mentor."
             />
