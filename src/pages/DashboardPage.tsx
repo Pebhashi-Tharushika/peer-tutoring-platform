@@ -45,12 +45,8 @@ export default function DashboardPage() {
         if (!createdUser.ok) {
           throw new Error("Failed to create/fetch user");
         }
-
-        // Logging the details to the console
-        const userData = await createdUser.json();
-        console.log("User ID:", user.id);
-        console.log("User Token:", token);
-        console.log("User created/fetched successfully:", userData);
+        
+        
       } catch (error) {
         console.error("Error creating/fetching user:", error);
       }
@@ -69,7 +65,7 @@ export default function DashboardPage() {
       if (!token) return;
 
       try {
-        console.log("User ID:", user.id);
+        
         const response = await fetch(
           `${BACKEND_URL}/academic/session/student/${user.id}`, // fetch the sessions for the student by Clerk ID
           {
@@ -109,7 +105,7 @@ export default function DashboardPage() {
 
   if (!courses.length) {
     return (
-      <div className="container py-10">
+      <div className="container py-10 min-h-[35vh]">
         <h1 className="text-3xl font-bold tracking-tight mb-6">My Courses</h1>
         <p className="text-muted-foreground">No courses enrolled yet.</p>
       </div>

@@ -18,6 +18,7 @@ export default function SessionPage() {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [sessionIdToUpdate, setSessionIdToUpdate] = useState<number | null>(null);
   const [sessionStatusToUpdate, setSessionStatusToUpdate] = useState<string>("PENDING");
+  const [isUpdating, setIsUpdating] = useState(false);
   const { getToken } = useAuth();
 
 
@@ -36,7 +37,7 @@ export default function SessionPage() {
       }
 
       const data = await response.json();
-      console.log(data);
+     
       setSessions(data);
     } catch (error) {
       console.error("Error fetching sessions:", error);
@@ -44,6 +45,7 @@ export default function SessionPage() {
   }
 
   async function updateStatus() {
+    setIsUpdating(true);
 
     const sessionId = sessionIdToUpdate;
     const status = sessionStatusToUpdate;
@@ -65,17 +67,24 @@ export default function SessionPage() {
       setSessions(prevSessions => prevSessions.map(s => s.session_id === data.session_id ? data : s));
 
       toast.success(`Session ${status.toUpperCase() === "ACCEPTED" ? "approved" : "marked as completed"} successfully`);
+      
+      setIsAlertDialogOpen(false);
+      
 
     } catch (error) {
       console.error(`Error ${status.toUpperCase() === "ACCEPTED" ? "approving session" : "marking session as completed"}: `, error);
-      toast.error(`Failed to ${status.toUpperCase() === "ACCEPTED" ? "approve session" : "mark session as completed"} classroom.`)
+      toast.error(`Failed to ${status.toUpperCase() === "ACCEPTED" ? "approve session" : "mark session as completed"} classroom.`);
+      setIsAlertDialogOpen(false);
+    }finally{
+      setSessionIdToUpdate(null);
+      setIsUpdating(false);
     }
   }
 
   async function confirmToUpdateSessionStatus(sessionId: number, status: string) {
     setSessionStatusToUpdate(status);
     setSessionIdToUpdate(sessionId);
-    setIsAlertDialogOpen(true);
+    setIsAlertDialogOpen(true); // Reset updating state after operation
   }
 
   useEffect(() => {
@@ -118,8 +127,13 @@ export default function SessionPage() {
 
             <AlertConfirmationDialog
               isOpen={isAlertDialogOpen}
-              onOpenChange={setIsAlertDialogOpen}
+              onOpenChange={(open) => !isUpdating && setIsAlertDialogOpen(open)}
               onConfirm={updateStatus}
+              isDisabledButton={isUpdating}
+              buttonName={isUpdating ?
+                sessionStatusToUpdate.toUpperCase() === "ACCEPTED" ? "Accepting" : "Marking As Completing"
+                : sessionStatusToUpdate.toUpperCase() === "ACCEPTED" ? "Accept" : "Mark As Complete"
+              }
               title="Are you absolutely sure?"
               description={`This action cannot be undone. This will change the status of the session as ${sessionStatusToUpdate.toUpperCase()}`}
             />

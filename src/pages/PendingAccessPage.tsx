@@ -17,7 +17,7 @@ export default function PendingAccessPage() {
         <div className="flex items-center justify-center min-h-[calc(100vh-100px)] px-4 py-12">
             <Card className="w-full max-w-md text-center">
                 <CardHeader className="flex flex-col items-center">
-                    <Clock className="h-12 w-12 text-blue-500 mb-4" />
+                    <Clock className="h-12 w-12 mb-4" />
                     <CardTitle className="text-2xl font-bold">Access Pending</CardTitle>
                     <CardDescription className="mt-2">
                         Your account is currently under review by an administrator.

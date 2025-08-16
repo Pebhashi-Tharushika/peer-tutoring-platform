@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
-import SkillMentorLogo from "@/assets/logo.webp";
+import PeerTutorLogo from "@/assets/logo.png";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -110,11 +110,11 @@ export function Navigation() {
         <div className="flex items-center">
           <Link to="/" className="flex items-center space-x-2">
             <img
-              src={SkillMentorLogo}
-              alt="SkillMentor Logo"
+              src={PeerTutorLogo}
+              alt="PeerTutor Logo"
               className="size-12 rounded-full"
             />
-            <span className="font-semibold text-xl">SkillMentor</span>
+            <span className="font-semibold text-xl">PeerTutor</span>
           </Link>
           <div className="ml-6 hidden md:block">
             <NavItems />
@@ -151,11 +151,11 @@ export function Navigation() {
                     onClick={() => setIsOpen(false)}
                   >
                     <img
-                      src={SkillMentorLogo}
-                      alt="SkillMentor Logo"
+                      src={PeerTutorLogo}
+                      alt="PeerTutor Logo"
                       className="size-10 rounded-full"
                     />
-                    <span className="font-semibold text-lg">SkillMentor</span>
+                    <span className="font-semibold text-lg">PeerTutor</span>
                   </Link>
                 </div>
 

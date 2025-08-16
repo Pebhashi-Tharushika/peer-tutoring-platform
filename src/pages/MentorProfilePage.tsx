@@ -12,8 +12,6 @@ export default function MentorProfilePage() {
     const { id } = useParams();
     const [mentorProfile, setMentorProfile] = useState<MentorProfile | null>(null);
 
-    console.log("Mentor ID:", id);
-
     async function fetchMentorProfleData() {
         try {
             const response = await fetch(`${BACKEND_URL}/academic/mentor/profile/${id}`);

@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Facebook, Instagram, Youtube, Twitter } from "lucide-react";
-import SkillMentorLogo from "@/assets/logo.webp";
+import PeerTutorLogo from "@/assets/logo.png";
 
 export function Footer() {
   return (
@@ -47,7 +47,7 @@ export function Footer() {
                   to="/"
                   className="text-gray-400 hover:text-primary transition-colors"
                 >
-                  SkillMentor for kids
+                  PeerTutor for kids
                 </Link>
               </li>
               <li>
@@ -55,7 +55,7 @@ export function Footer() {
                   to="/"
                   className="text-gray-400 hover:text-primary transition-colors"
                 >
-                  SkillMentor for business
+                  PeerTutor for business
                 </Link>
               </li>
               <li>
@@ -139,14 +139,14 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/40">
           <div className="mb-4 md:mb-0 flex items-center space-x-2">
             <img
-              src={SkillMentorLogo}
-              alt="SkillMentor Logo"
+              src={PeerTutorLogo}
+              alt="PeerTutor Logo"
               className="size-16 rounded-full"
             />
-            <span className="font-semibold text-5xl">SkillMentor</span>
+            <span className="font-semibold text-5xl">PeerTutor</span>
           </div>
           <p className="text-gray-400 text-sm">
-            SkillMentor Inc. © Copyright 2025. All Rights Reserved.
+            PeerTutor Inc. © Copyright 2025. All Rights Reserved.
           </p>
         </div>
       </div>

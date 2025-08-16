@@ -29,9 +29,9 @@ export function SignupDialog({ isOpen, onClose }: SignupDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="overflow-hidden p-0 border-none rounded-2xl max-w-[440px]">
-        <DialogTitle className="sr-only">Sign up to SkillMentor</DialogTitle>
+        <DialogTitle className="sr-only">Sign up to PeerTutor</DialogTitle>
         <DialogDescription className="sr-only">
-          Sign up dialog to access SkillMentor's tutor booking features
+          Sign up dialog to access PeerTutor's tutor booking features
         </DialogDescription>
         <div className="grid grid-cols-3 gap-4 p-4">
           {[
@@ -56,7 +56,7 @@ export function SignupDialog({ isOpen, onClose }: SignupDialogProps) {
             Sign up to see all our amazing tutors
           </h2>
           <p className="text-base text-muted-foreground mb-6">
-            Search through thousands of qualified SkillMentor tutors by accent,
+            Search through thousands of qualified PeerTutor tutors by accent,
             availability, and more!
           </p>
           <Button

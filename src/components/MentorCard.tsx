@@ -63,7 +63,7 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
               </div>
             </div>
             <div className="w-36">
-              <div className="flex items-center justify-center">
+              <div className="size-20 bg-card flex items-center justify-center">
                 {mentorClass.class_image ? (
                   <img
                     src={mentorClass.class_image}

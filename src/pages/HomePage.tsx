@@ -22,7 +22,11 @@ export default function HomePage() {
 
         const data = await response.json();
         
-        setMentorClasses(data.filter((classroom: MentorClass) => classroom.mentor !== null));
+        setMentorClasses(
+          data
+            .filter((classroom: MentorClass) => classroom.mentor !== null)
+            .sort((a:MentorClass, b:MentorClass) => a.title.localeCompare(b.title))
+        );
       } catch (error) {
         console.error("Error fetching mentor classes:", error);
       }
@@ -36,7 +40,7 @@ export default function HomePage() {
       <div className="flex flex-col items-center justify-center space-y-8 text-center py-8">
         <div className="space-y-2">
           <h1 className="text-5xl tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-            Find your SkillMentor
+            Find your PeerTutor
           </h1>
           <p className="mx-auto text-gray-500 md:text-xl dark:text-gray-400 max-w-xs sm:max-w-full">
             Empower your career with personalized mentorship for AWS Developer{" "}

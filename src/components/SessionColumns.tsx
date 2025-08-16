@@ -90,7 +90,7 @@ export const SessionColumns = ({ approveSession, markAsCompleted }: ColumnAction
             disabled={session.session_status !== "PENDING"}
             onClick={() => approveSession(session.session_id)}
           >
-            Approve
+            Accept
           </Button>
           <Button
             variant="outline"

@@ -25,6 +25,14 @@ import { MultiSelect, MultiSelectRef } from "./MultiSelect"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { ScrollArea } from "./ui/scroll-area"
 
+const startYear = new Date().getFullYear() - 20;
+const endYear = new Date().getFullYear();
+
+const years: string[] = Array.from(
+  { length: endYear - startYear + 1 },
+  (_, i) => startYear + i
+).map(year => String(year));
+
 
 const baseSchema = z.object({
   title: z.enum(TitleEnum, { error: "required*" }),
@@ -34,7 +42,7 @@ const baseSchema = z.object({
   phoneNumber: z.string().regex(/^\+[1-9]\d{6,14}$/, { message: "Invalid" }),
   address: z.string().min(5, { message: "required*" }),
   profession: z.string().min(2, { message: "required*" }),
-  qualification: z.string({ error: "required*" }),
+  qualification: z.string().nonempty({message:"required*"}),
   sessionFee: z.coerce.number().min(1, { message: "Invalid" }), // Use z.coerce to convert string to number
   subject: z.string().min(10, { message: "must be at least 10 characters" }).max(750, { message: "Subject must not be longer than 750 characters." }),
   classes: z.array(z.string()).nonempty({ message: "at least one class is required*" }),
@@ -94,8 +102,6 @@ export function MentorDialog({
     },
   });
 
-  console.log(initialData?.qualification);
-  console.log(initialData?.qualification.substring(12));
   const multiSelectRef = useRef<MultiSelectRef>(null);
 
   useEffect(() => {
@@ -103,7 +109,7 @@ export function MentorDialog({
     if (isOpen) {
       setIsSubmitting(false);
       if (initialData) {
-        
+
         form.reset({
           title: TitleEnum[initialData.title as keyof typeof TitleEnum],
           firstName: initialData.first_name,
@@ -265,13 +271,6 @@ export function MentorDialog({
     }
   }
 
-  const startYear = new Date().getFullYear() - 20;
-  const endYear = new Date().getFullYear();
-
-  const years = Array.from(
-    { length: endYear - startYear + 1 },
-    (_, i) => startYear + i
-  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -372,7 +371,7 @@ export function MentorDialog({
                         <SelectContent>
                           <ScrollArea className="h-48">
                             {years.map((year) => (
-                              <SelectItem key={year} value={String(year)}>
+                              <SelectItem key={year} value={year}>
                                 {year}
                               </SelectItem>
                             ))}
@@ -427,12 +426,12 @@ export function MentorDialog({
 
                 <DialogFooter className="pt-4">
                   <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-                  <Button 
-                  type="submit"
-                  disabled={isSubmitting}
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
                   >
                     {isSubmitting ? mode === "create" ? "Saving..." : "Updating..." : mode === "create" ? "Save" : "Update"}
-                    </Button>
+                  </Button>
                 </DialogFooter>
               </form>
             </Form>

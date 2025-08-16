@@ -51,12 +51,12 @@ export default function ClassroomPage() {
       }
       setClasses(classes.filter(c => c.class_room_id !== classroomIdToDelete));
       toast.success("Classroom deleted successfully");
-
-    } catch (error) {
-      console.error(error);
-      
-    } finally {
       setIsAlertDialogOpen(false);
+    } catch (error) {
+      console.error("failed to delete classroom: ",error);
+      toast.error("failed to delete classroom");
+      setIsAlertDialogOpen(false);
+    } finally {
       setClassroomIdToDelete(null);
       setIsDeleting(false); // Reset deleting state after operation
     }
@@ -137,7 +137,6 @@ export default function ClassroomPage() {
             <AlertConfirmationDialog
               isOpen={isAlertDialogOpen}
               onOpenChange={(open) => !isDeleting && setIsAlertDialogOpen(open)}
-              // onOpenChange={setIsAlertDialogOpen}
               onConfirm={deleteClassroom}
               isDisabledButton={isDeleting}
               buttonName={isDeleting ? "Deleting" : "Delete"}
