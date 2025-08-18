@@ -1,12 +1,12 @@
 # Peer Tutoring Platform
 
 Swagger UI
-  http://localhost:8080/api/v1/swagger-ui/index.html
+  https://peer-tutoring-platform-be.onrender.com/api/v1/swagger-ui/index.html
 <br><br>
 Actuators
- - All   : http://localhost:8080/api/v1/actuator
- - Health: http://localhost:8080/api/v1/actuator/health
- - Info  : http://localhost:8080/api/v1/actuator/info
+ - All   : https://peer-tutoring-platform-be.onrender.com/api/v1/actuator
+ - Health: https://peer-tutoring-platform-be.onrender.com/api/v1/actuator/health
+ - Info  : https://peer-tutoring-platform-be.onrender.com/api/v1/actuator/info
 
 
  
