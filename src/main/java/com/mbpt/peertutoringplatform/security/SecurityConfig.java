@@ -22,7 +22,7 @@ import java.util.Base64;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity()
 public class SecurityConfig {
 
     private static final String JWKS_URL = "https://finer-flamingo-13.clerk.accounts.dev/.well-known/jwks.json";
@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.addAllowedOrigin("*");
+                    corsConfiguration.addAllowedOrigin("https://peer-tutoring-platform.vercel.app");
                     corsConfiguration.addAllowedMethod("*");
                     corsConfiguration.addAllowedHeader("*");
                     return corsConfiguration;
