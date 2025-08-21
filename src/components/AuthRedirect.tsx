@@ -27,5 +27,5 @@ export default function AuthRedirect() {
 
     }, [isLoaded, user]);
 
-    return null;;
+    return null;
 }

@@ -21,12 +21,24 @@ function App() {
   return (
     <BrowserRouter>
       <Layout>
-        <Routes>
+      <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/redirect" element={<AuthRedirect />} />
           <Route path="/pending-access" element={<PendingAccessPage />} />
           <Route path="/mentor/:id" element={<MentorProfilePage />} />
+          <Route 
+            path="/redirect" 
+            element={
+              <>
+                <SignedIn>
+                  <AuthRedirect />
+                </SignedIn>
+                <SignedOut>
+                  <LoginPage/>
+                </SignedOut>
+              </>
+            } 
+          />
           <Route
             path="/dashboard"
             element={
@@ -42,16 +54,61 @@ function App() {
               </>
             }
           />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={
-              <RoleGate requiredRole="admin">
-                <AdminDashboardPage />
-              </RoleGate>
-            } />
-            <Route path="/admin/classroom/all" element={<ClassroomPage />} />
-            <Route path="/admin/session/all" element={<SessionPage />} />
-            <Route path="/admin/mentor/all" element={<MentorPage />} />
-            <Route path="/admin/student/all" element={<StudentPage />} />
+          <Route 
+            path="/admin" 
+            element={
+              <>
+                <SignedIn>
+                  <RoleGate requiredRole="admin">
+                    <AdminLayout />
+                  </RoleGate>
+                </SignedIn>
+                <SignedOut>
+                  <LoginPage />
+                </SignedOut>
+              </>
+            }
+            >
+            <Route 
+              index 
+              element={
+                <RoleGate requiredRole="admin">
+                  <AdminDashboardPage />
+                </RoleGate>
+              } 
+            />
+            <Route
+              path="classroom/all"
+              element={
+                <RoleGate requiredRole="admin">
+                  <ClassroomPage />
+                </RoleGate>
+              }
+            />
+            <Route
+              path="session/all"
+              element={
+                <RoleGate requiredRole="admin">
+                  <SessionPage />
+                </RoleGate>
+              }
+            />
+            <Route
+              path="mentor/all"
+              element={
+                <RoleGate requiredRole="admin">
+                  <MentorPage />
+                </RoleGate>
+              }
+            />
+            <Route
+              path="student/all"
+              element={
+                <RoleGate requiredRole="admin">
+                  <StudentPage />
+                </RoleGate>
+              }
+            />
           </Route>
           <Route
             path="/payment/:sessionId"

@@ -36,9 +36,9 @@ export default function MentorProfilePage() {
     return (
         <div className="space-y-10 max-w-[85vw] mx-auto py-10">
             <div className='flex justify-between items-center border-b-1 border-gray-300 pb-1'>
-                <Button 
-                onClick={() => navigate("/")}
-className='bg-transparent border-none shadow-none text-gray-600 font-bold transform transition-transform duration-300 hover:scale-105 hover:text-black  hover:bg-transparent hover:cursor-pointer'
+                <Button
+                    onClick={() => navigate("/")}
+                    className='bg-transparent border-none shadow-none text-gray-600 font-bold transform transition-transform duration-300 hover:scale-105 hover:text-black  hover:bg-transparent hover:cursor-pointer'
                 >
                     <CircleChevronLeft />
                     Back
@@ -56,7 +56,7 @@ className='bg-transparent border-none shadow-none text-gray-600 font-bold transf
                     <div className='lg:col-span-8 space-y-4'>
                         <h1 className="text-3xl text-gray-800 font-bold">{TitleEnum[mentorProfile.mentor.title as keyof typeof TitleEnum] + " " + mentorProfile.mentor.first_name + " " + mentorProfile.mentor.last_name}</h1>
                         <p className='text-muted-foreground'>{mentorProfile.mentor.subject}</p>
-                        <div className="bg-muted p-6 rounded-xl shadow-lg w-full max-w-2xl hover:shadow-xl transition-shadow duration-300">
+                        <div className="bg-muted p-6 rounded-xl shadow-lg w-full max-w-full hover:shadow-xl transition-shadow duration-300">
                             <h2 className="text-xl font-bold mb-4 text-gray-800">Classroom Enrollment</h2>
                             <Table>
                                 <TableHeader>

@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <section className="min-h-screen flex flex-col">
         <Navigation />
-        <main>{children}</main>
+        <main className="min-h-[50vh]">{children}</main>
         <Footer />
       </section>
       <Toaster richColors closeButton duration={1700} />
